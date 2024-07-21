@@ -1,7 +1,11 @@
 package nl.novi.cannoliworld.repositories;
 
-import nl.novi.cannoliworld.service.FileUploadResponse;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface FileUploadRepository {
-    void save(FileUploadResponse fileUploadResponse);
+import java.util.Optional;
+
+public interface FileUploadRepository extends JpaRepository<FileUploadResponse, String> {
+
+    Optional<FileUploadResponse> findByFileName(String fileName);
+
 }

@@ -1,4 +1,4 @@
 package nl.novi.cannoliworld.service;
 
-public class DeliveryRequestService {
+public interface DeliveryRequestService {
 }
