@@ -2,7 +2,7 @@ package nl.novi.cannoliworld.controllers;
 
 import nl.novi.cannoliworld.dtos.UserDto;
 import nl.novi.cannoliworld.exeptions.UsernameNotFoundException;
-import nl.novi.cannoliworld.service.UserServiceImpl;
+import nl.novi.cannoliworld.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,10 +16,10 @@ import java.util.List;
 @RequestMapping(value = "/users")
 public class UserController {
 
-    private final UserServiceImpl userService;
+    private final UserService userService;
 
     @Autowired
-    private UserController(UserServiceImpl userService) { this.userService = userService; }
+    private UserController(UserService userService) { this.userService = userService; }
 
     @GetMapping("")
     public ResponseEntity<List<UserDto>> getUsers() {

@@ -42,7 +42,7 @@ public class User {
 
     public Set<Authority> getAuthorities() { return authorities; }
 
-    public static void addAuthority(Authority authority) { this.authorities.add(authority);}
+    public void addAuthority(Authority authority) {this.authorities.add(authority); }
 
     public void removeAuthority(Authority authority) { this.authorities.remove(authority); }
 
