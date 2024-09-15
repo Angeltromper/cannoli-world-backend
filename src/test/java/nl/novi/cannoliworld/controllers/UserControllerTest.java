@@ -1,7 +1,6 @@
 package nl.novi.cannoliworld.controllers;
 
 import nl.novi.cannoliworld.models.User;
-import nl.novi.cannoliworld.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    UserService userService;
+    UserService4 userService;
 
     @BeforeEach
     public void setup() {

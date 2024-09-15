@@ -1,15 +1,15 @@
 package nl.novi.cannoliworld.controllers;
 
-import nl.novi.cannoliworld.dtos.UserDto;
-import nl.novi.cannoliworld.exeptions.UsernameNotFoundException;
+import nl.novi.cannoliworld.models.User;
+import nl.novi.cannoliworld.service.PersonService;
 import nl.novi.cannoliworld.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 
 @CrossOrigin
 @RestController
@@ -18,41 +18,73 @@ public class UserController {
 
     private final UserService userService;
 
+    private final PersonService personService;
+
+    private final PhotoController photoController;
+
     @Autowired
-    private UserController(UserService userService) { this.userService = userService; }
-
-    @GetMapping("")
-    public ResponseEntity<List<UserDto>> getUsers() {
-        List<UserDto> userDtos = userService.getUsers();
-        return ResponseEntity.ok().body(userDtos);
+    public UserController(UserService userService, PhotoController photoController, PersonService personService) {
+        this.userService = userService;
+        this.personService = personService;
+        this.photoController = photoController;
     }
 
-    @GetMapping("/{username}")
-    public ResponseEntity<UserDto> getUserByUsername(@PathVariable String username) {
-        try {
-            UserDto userDto = userService.getUser(username);
-            return ResponseEntity.ok().body(userDto);
-        } catch (UsernameNotFoundException exception) {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/all")
+    public ResponseEntity<Object> getUsers() {
+
+        return ResponseEntity.ok().body(userService.getUsers());
     }
-    @PostMapping(value = "/createUser")
-    public ResponseEntity<Object> createUser(@RequestBody UserDto dto) {
-        String newUsername = userService.createUser(dto);
+
+    @GetMapping(value = "/{username}")
+    public ResponseEntity<Object> getUser(@PathVariable("username") String username) {
+
+        return ResponseEntity.ok().body(userService.getUser(username));
+    }
+
+    @PostMapping(value = "/create")
+    public ResponseEntity<Object> createUser(@RequestBody User user) {
+
+        String newUsername = userService.createUser(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}")
                 .buildAndExpand(newUsername).toUri();
+
         return ResponseEntity.created(location).build();
     }
-    @PutMapping(value = "/{username}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable("username") String username, @RequestBody UserDto dto) {
-        userService.updateUser(username, dto);
+
+    @DeleteMapping(value = "/delete/{username}")
+    public ResponseEntity<?> deleteUser(@PathVariable("username") String username) {
+
+        userService.deleteUser(username);
+
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping(value = "/{username]")
-    public ResponseEntity<Object> deleteUser(@PathVariable("username") String username, @RequestBody UserDto dto) {
-        userService.deleteUser(username);
-        return ResponseEntity.noContent().build();
+    @PutMapping("/{username}/{personId}")
+    public void assignPersonToUser(@PathVariable("username") String username,
+                                   @PathVariable("personId") Long personId) {
+
+        userService.assignPersonToUser(personId, username);
+    }
+
+    @PutMapping("/{username}/picture/{fileName}")
+    public void assignPictureToUser(@PathVariable("username") String username,
+                                    @PathVariable("fileName") String fileName) {
+
+        userService.assignPictureToUser(username, fileName);
+    }
+
+    @PutMapping("/{username}/picture")
+    public void uploadPictureToUser(@PathVariable("username") String username,
+                                    @RequestBody MultipartFile file) {
+
+        photoController.singleFileUpload(file);
+        userService.assignPictureToUser(file.getOriginalFilename(), username);
     }
 }
+
+
+
+
+
+
 
