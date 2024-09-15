@@ -1,5 +1,7 @@
 package nl.novi.cannoliworld.models;
 
+import lombok.Setter;
+
 import java.util.Set;
 import java.util.HashSet;
 import javax.persistence.*;
@@ -8,10 +10,12 @@ import javax.persistence.*;
 @Table(name = "users")
 public class User {
 
+    @Setter
     @Id
     @Column(nullable = false, unique = true)
     private String username;
 
+    @Setter
     @Column
     private String emailAdress;
 
@@ -30,11 +34,7 @@ public class User {
         return username;
     }
 
-    public void setUsername(String username) { this.username = username; }
-
     public String getEmailAdress() { return emailAdress; }
-
-    public void setEmailAdress(String emailAdress) { this.emailAdress = emailAdress; }
 
     public String getPassword() { return password; }
 
@@ -42,10 +42,21 @@ public class User {
 
     public Set<Authority> getAuthorities() { return authorities; }
 
-    public static void addAuthority(Authority authority) { this.authorities.add(authority);}
+    public void addAuthority(Authority authority) {this.authorities.add(authority); }
 
     public void removeAuthority(Authority authority) { this.authorities.remove(authority); }
 
+    public void setId(long l) {
+    }
+
+    public void setApiKey(String randomString) {
+    }
+
+    public void setPerson(Person person) {
+    }
+
+    public void setPicture(FileUploadResponse picture) {
+    }
 }
 
 

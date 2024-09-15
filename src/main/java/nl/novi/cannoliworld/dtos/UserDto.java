@@ -2,6 +2,7 @@ package nl.novi.cannoliworld.dtos;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import nl.novi.cannoliworld.models.Authority;
+import nl.novi.cannoliworld.models.Person;
 
 import java.util.Set;
 
@@ -30,5 +31,25 @@ public class UserDto {
     public Set<Authority>  getAuthorities() { return authorities; }
 
     public void setAuthorities(Set<Authority> authorities) { this.authorities = authorities; }
+
+    public boolean isEmpty() {
+        return false;
+    }
+
+    public UserDto get() {
+        return null;
+    }
+
+    public void setId(long l) {
+    }
+
+    public void setPerson(Person person) {
+    }
+
+    public void setApiKey(String randomString) {
+    }
+
+    public void addAuthority(Authority roleUser) {
+    }
 }
 

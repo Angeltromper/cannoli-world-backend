@@ -22,6 +22,7 @@ public interface CannoliService {
 
     void assignPictureToCannoli(String fileName, Long id);
 
+    List<Cannoli> findProductListByType(String productType);
 }
 
 

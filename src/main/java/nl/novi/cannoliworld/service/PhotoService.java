@@ -1,13 +1,15 @@
 package nl.novi.cannoliworld.service;
 
 import nl.novi.cannoliworld.CannoliWorldApplication;
+import nl.novi.cannoliworld.models.FileUploadResponse;
 import nl.novi.cannoliworld.repositories.FileUploadRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.annotation.Resource;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -16,20 +18,19 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
-
+@Service
 public class PhotoService {
+    // @Value("C:\\Novi\\Intellij IDEA\cannoli-world\\uploads")
     @Value("${my.upload_location}")
     private Path fileStoragePath;
-
     private final String fileStorageLocation;
+    private final FileUploadRepository fileUploadRepository;
 
-    private final FileUploadRepository repo;
-
-    public PhotoService(@Value("${my.upload_location}") String fileStorageLocation, FileUploadRepository repo) {
+    public PhotoService(@Value("${my.upload_location}") String fileStorageLocation, FileUploadRepository repo, FileUploadRepository fileUploadRepository) {
         fileStoragePath = Paths.get(fileStorageLocation).toAbsolutePath().normalize();
 
         this.fileStorageLocation = fileStorageLocation;
-        this.repo = repo;
+        this.fileUploadRepository = fileUploadRepository;
 
         try {
             Files.createDirectories(fileStoragePath);
@@ -51,9 +52,33 @@ public class PhotoService {
         } catch (IOException e) {
             throw new RuntimeException("Issue in storing the file", e);
         }
-        repo.save(new FileUploadResponse(fileName, file.getContentType(), url));
+
+        fileUploadRepository.save(new FileUploadResponse(fileName, file.getContentType(), url));
 
         return fileName;
+    }
+
+    public Resource downLoadFile(String fileName) {
+
+        Path path = Paths.get(fileStorageLocation).toAbsolutePath().resolve(fileName);
+
+        Resource resource;
+
+        try {
+            resource = (Resource) new UrlResource(path.toUri());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("Issue in reading the file", e);
+        }
+
+        if(resource.exists()&& resource.isReadable()) {
+            return resource;
+        } else {
+            throw new RuntimeException("the file doesn't exist or not readable");
+        }
+    }
+
+    public void deletePicture(String fileName) {
+        fileUploadRepository.deleteById(fileName);
     }
 }
 
