@@ -27,6 +27,9 @@ public class Person {
     @OneToMany(mappedBy = "deliverer")
     private List<DeliveryRequest> deliverer;
 
+    public Person() {
+    }
+
     public Long getId() { return id; }
 
     public void setId(Long id) { this.id = id; }

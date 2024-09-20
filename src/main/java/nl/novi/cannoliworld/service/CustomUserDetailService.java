@@ -1,31 +1,35 @@
 package nl.novi.cannoliworld.service;
 
-import nl.novi.cannoliworld.dtos.UserDto;
 import nl.novi.cannoliworld.models.Authority;
+import nl.novi.cannoliworld.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class CustomerUserDetailsService implements UserDetailsService {
-    private final UserServiceImpl userService;
+public class CustomUserDetailService implements UserDetailsService {
     @Autowired
-    public CustomerUserDetailsService(UserServiceImpl userService) { this.userService = userService; }
+    private UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        UserDto userDto = userService.getUser(username);
+        Optional<User> user = userService.getUser(username);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException(username);
+        }
 
-        String password = userDto.getPassword();
+        String password = user.get().getPassword();
 
-        Set<Authority> authorities = userDto.getAuthorities();
+        Set<Authority> authorities = user.get().getAuthorities();
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         for (Authority authority : authorities) {
             grantedAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority()));
@@ -34,3 +38,4 @@ public class CustomerUserDetailsService implements UserDetailsService {
         return new org.springframework.security.core.userdetails.User(username, password, grantedAuthorities);
     }
 }
+

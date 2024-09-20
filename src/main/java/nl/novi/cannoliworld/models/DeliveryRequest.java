@@ -53,4 +53,7 @@ public class DeliveryRequest {
     public String getComment() { return comment; }
 
     public void setComment(String comment) { this.comment = comment; }
+
+    public void setStatus(Status status) {
+    }
 }
