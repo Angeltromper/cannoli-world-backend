@@ -31,7 +31,7 @@ class DeliveryRequestControllerTest {
     @Test
     @DisplayName("Should update the status of the delivery request")
     void updateDeliveryRequestWhenStatusIsUpdated() {
-        DeliveryRequestStatusDto, deliveryRequestStatusDto = new DeliveryRequestStatusDto();
+        DeliveryRequestStatusDto deliveryRequestStatusDto = new DeliveryRequestStatusDto();
         deliveryRequestStatusDto.setId(1L);
         deliveryRequestStatusDto.setStatus(Status.AVAILABLE);
 

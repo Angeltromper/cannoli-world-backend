@@ -23,7 +23,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    UserService4 userService;
+    UserService userService;
 
     @BeforeEach
     public void setup() {

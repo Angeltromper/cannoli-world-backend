@@ -1,12 +1,14 @@
 package nl.novi.cannoliworld.models;
 
-import com.vladmihalcea.hibernate.type.json.JsonStringType;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
 
 @Entity
+/*
 @TypeDef(name = "json", typeClass = JsonStringType.class)
+*/
+
 @Table(name = "cannolis")
 
 public class Cannoli {
