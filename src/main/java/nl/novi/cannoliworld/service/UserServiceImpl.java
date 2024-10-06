@@ -2,7 +2,7 @@ package nl.novi.cannoliworld.service;
 
 import nl.novi.cannoliworld.dtos.UserDto;
 import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
-import nl.novi.cannoliworld.exeptions.UserNameAlreadyExistException;
+import nl.novi.cannoliworld.exeptions.UsernameAlreadyExistException;
 import nl.novi.cannoliworld.models.Authority;
 import nl.novi.cannoliworld.models.Person;
 import nl.novi.cannoliworld.models.User;
@@ -48,26 +48,42 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Collection<User> getUser() {
-        return null;
+        return userRepository.findAll();
     }
+
 
     @Override
     public Optional<User> getUser(String username) {
         return userRepository.findById(username);
     }
 
+    public boolean userExists(String username) { return userRepository.existsById(username); }
+
     public String createUser(User user) {
-        return null;
+
+        if (userExists(user.getUsername())) {
+            throw new UsernameAlreadyExistException("Username is al in gebruik!");
+        }
+
+        String randomString = RandomStringGenerator.generateAlphaNumeric(20);
+        user.setEmailAdress(user.getEmailAdress());
+        user.setApikey(randomString);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.getAuthorities().clear();
+        user.addAuthority(new Authority(user.getUsername(), "ROLE_USER"));
+        user.setId((long) ((getUsers().size()) + 1));
+
+        user.setPerson(personService.savePerson(new Person()));
+
+        User newUser = userRepository.save(user);
+
+        return newUser.getUsername();
+
     }
 
-    public boolean userExists(String username) {
-        return userRepository.existsById(username);
-    }
 
     @Override
-    public void deleteUser(String username) {
-        userRepository.deleteById(username);
-    }
+    public void deleteUser(String username) { userRepository.deleteById(username); }
 
     public void assignPersonToUser(Long personId, String username) {
         var optionalUser = userRepository.findById(username);
@@ -82,15 +98,16 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    public void assignPictureToUser(String fileName, String username) {
+    public void assignImageToUser(String fileName, String username) {
+
         var optionalUser = userRepository.findById(username);
-        var optionalPicture = fileUploadRepository.findByFileName(fileName);
+        var optionalImage = fileUploadRepository.findByFileName(fileName);
 
-        if (optionalPicture.isPresent() && optionalUser.isPresent()) {
+        if (optionalImage.isPresent() && optionalUser.isPresent()) {
             var user = optionalUser.get();
-            var picture = optionalPicture.get();
+            var image = optionalImage.get();
 
-            user.setPicture(picture);
+            user.setImage(image);
             userRepository.save(user);
 
         } else {

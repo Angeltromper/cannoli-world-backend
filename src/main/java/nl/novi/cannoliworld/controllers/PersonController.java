@@ -31,13 +31,13 @@ public class PersonController {
         List<Person> personList;
 
         if (personFirstname == null && personLastname == null) {
-            personList = (List<Person>) personService.getPersonList();
+            personList = personService.getPersonList();
 
         } else if (personFirstname != null && personLastname == null) {
-            personList = (List<Person>) personService.findPersonListByPersonFirstname(personFirstname);
+            personList = personService.findPersonListByPersonFirstname(personFirstname);
 
         } else {
-            personList = (List<Person>) personService.findPersonListByPersonLastname(personLastname);
+            personList = personService.findPersonListByPersonLastname(personLastname);
         }
         for (Person person : personList) {
          dtos.add(PersonDto.fromPerson(person));

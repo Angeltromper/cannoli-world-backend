@@ -18,7 +18,7 @@ public class Person {
     String personCity;
     String personZipcode;
 
-    @OneToOne(mappedBy = "person")
+    @OneToOne()
     User user;
 
     @OneToMany(mappedBy = "applier")

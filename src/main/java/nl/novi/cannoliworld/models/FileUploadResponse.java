@@ -3,7 +3,7 @@ package nl.novi.cannoliworld.models;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "picture")
+@Table(name = "image")
 public class FileUploadResponse {
 
     @Id

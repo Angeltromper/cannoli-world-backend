@@ -1,51 +1,48 @@
 package nl.novi.cannoliworld.controllers;
 
+import nl.novi.cannoliworld.exeptions.BadRequestException;
 import nl.novi.cannoliworld.models.User;
-import org.junit.jupiter.api.BeforeEach;
+import nl.novi.cannoliworld.service.UserService;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@AutoConfigureMockMvc(addFilters = false)
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Mock
+    private UserService userService;
 
-    @MockBean
-    UserService userService;
+    @InjectMocks
+    private UserController userController;
 
-    @BeforeEach
-    public void setup() {
+    @Test
+    @DisplayName("Should create a user when the user does not exist")
+    void createUserWhenUserDoesNotExist() {
+
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
+
         User user = new User();
-        user.setUsername("tester");
-    }
+        user.setUsername("Angeltr");
+        user.setPassword("Angeltr123");
+        user.setEmailAdress("test@test.nl");
 
-    @Test
-    public void getUsersReturnsStatusOk() throws Exception {
-        mockMvc.perform(get("/users/"))
-                .andExpect(status().isOk());
-    }
+        ResponseEntity<Object> response = userController.createUser(user);
 
-    @Test
-    void retrieveUser() throws Exception {
-        this.mockMvc
-                .perform(MockMvcRequestBuilders.get("/users/tester"))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.status().isOk());
-    }
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
+    }
 }
-
 
 

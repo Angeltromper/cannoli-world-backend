@@ -13,9 +13,10 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import javax.servlet.Filter;
+
 
 @Configuration
 @EnableWebSecurity
@@ -38,12 +39,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
+
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
 
 
         http
@@ -69,13 +68,13 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/persons/{id}").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/persons/**").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/products").permitAll()
-                .antMatchers(HttpMethod.GET, "/products/{id}").permitAll()
-                .antMatchers(HttpMethod.POST, "/products/{id}/picture").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/products/{id}/picture").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/products/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/products/").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/products/{id}**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/cannolis").permitAll()
+                .antMatchers(HttpMethod.GET, "/cannolis/{id}").permitAll()
+                .antMatchers(HttpMethod.POST, "/cannolis/{id}/image").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/cannolis/{id}/image").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/cannolis/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/cannolis/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/cannolis/{id}**").hasRole("ADMIN")
 
                 .antMatchers(HttpMethod.GET, "/deliveryRequests/all").permitAll()
                 .antMatchers(HttpMethod.GET, "/deliveryRequests/{id}").permitAll()
@@ -83,15 +82,15 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/deliveryRequests/{id}").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/deliveryRequests/delete/{id}").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/pictures/upload").permitAll()
-                .antMatchers(HttpMethod.GET, "/pictures/download/{fileName").permitAll()
-                .antMatchers(HttpMethod.GET, "/pictures/delete").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/images/upload").permitAll()
+                .antMatchers(HttpMethod.GET, "/images/download/{fileName").permitAll()
+                .antMatchers(HttpMethod.GET, "/images/delete").hasRole("ADMIN")
 
                 .antMatchers("/authenticate").permitAll()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore((Filter) jwtRequestFilter, (Class<? extends Filter>) UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
 

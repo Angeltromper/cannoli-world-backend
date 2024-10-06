@@ -2,10 +2,12 @@ package nl.novi.cannoliworld.dtos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import lombok.Getter;
 import nl.novi.cannoliworld.models.Status;
 
 import java.util.List;
 
+@Getter
 @Data
 public class DeliveryRequestInputDto {
 
@@ -16,10 +18,4 @@ public class DeliveryRequestInputDto {
     private Status status;
     private Long applier;
 
-    public List<Long> getCannoliList() { return cannoliList; }
-    public String getComment() { return comment; }
-
-    public Long getApplier() { return applier; }
-
-    public Status getStatus() { return status; }
 }

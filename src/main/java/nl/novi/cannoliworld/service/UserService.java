@@ -20,5 +20,5 @@ public interface UserService {
 
     void assignPersonToUser(Long id, String username);
 
-    void assignPictureToUser(String fileName, String username);
+    void assignImageToUser(String fileName, String username);
 }

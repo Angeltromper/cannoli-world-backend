@@ -39,7 +39,7 @@ public class Cannoli {
     public double price;
 
     @OneToOne
-    FileUploadResponse picture;
+    FileUploadResponse image;
 
     public Long getId() { return id; }
 
@@ -53,8 +53,8 @@ public class Cannoli {
 
     public double getPrice() { return price; }
 
-    public FileUploadResponse getPicture()  { return picture; }
-    public void setPicture(FileUploadResponse picture) { this.picture = picture; }
+    public FileUploadResponse getImage()  { return image; }
+    public void setImage(FileUploadResponse image) { this.image = image; }
 
     public void setId(Long id) { this.id = id; }
 

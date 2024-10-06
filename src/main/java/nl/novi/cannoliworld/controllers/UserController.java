@@ -66,19 +66,19 @@ public class UserController {
         userService.assignPersonToUser(personId, username);
     }
 
-    @PutMapping("/{username}/picture/{fileName}")
-    public void assignPictureToUser(@PathVariable("username") String username,
+    @PutMapping("/{username}/image/{fileName}")
+    public void assignImageToUser(@PathVariable("username") String username,
                                     @PathVariable("fileName") String fileName) {
 
-        userService.assignPictureToUser(username, fileName);
+        userService.assignImageToUser(username, fileName);
     }
 
-    @PutMapping("/{username}/picture")
-    public void uploadPictureToUser(@PathVariable("username") String username,
+    @PutMapping("/{username}/image")
+    public void uploadImageToUser(@PathVariable("username") String username,
                                     @RequestBody MultipartFile file) {
 
         photoController.singleFileUpload(file);
-        userService.assignPictureToUser(file.getOriginalFilename(), username);
+        userService.assignImageToUser(file.getOriginalFilename(), username);
     }
 }
 

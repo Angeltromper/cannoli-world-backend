@@ -85,18 +85,18 @@ public class CannoliController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("cannoli/{id}/picture/{filename}")
-    public void assignPictureToCannoli(@PathVariable("id") Long cannoliId,
+    @PutMapping("cannoli/{id}/image/{filename}")
+    public void assignImageToCannoli(@PathVariable("id") Long cannoliId,
                                        @PathVariable("fileName") String fileName) {
 
-        cannoliService.assignPictureToCannoli(fileName, cannoliId);
+        cannoliService.assignImageToCannoli(fileName, cannoliId);
     }
 
-    @PutMapping("/{id}/picture")
-    public void uploadPictureToCannoli(@PathVariable("id") Long cannoliId,
+    @PutMapping("/{id}/image")
+    public void uploadImageToCannoli(@PathVariable("id") Long cannoliId,
                                        @RequestBody MultipartFile file){
         photoController.singleFileUpload(file);
-        cannoliService.assignPictureToCannoli(file.getOriginalFilename(), cannoliId);
+        cannoliService.assignImageToCannoli(file.getOriginalFilename(), cannoliId);
     }
 }
         

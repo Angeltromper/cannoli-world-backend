@@ -77,7 +77,7 @@ public class PhotoService {
         }
     }
 
-    public void deletePicture(String fileName) {
+    public void deleteImage(String fileName) {
         fileUploadRepository.deleteById(fileName);
     }
 }

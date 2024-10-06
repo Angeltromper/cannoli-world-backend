@@ -78,7 +78,7 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
             }
         }
         deliveryRequest.setStatus(deliveryRequestInputDto.getStatus().AVAILABLE);
-        deliveryRequest.setCannoliList(cannoliList2);
+//        deliveryRequest.setCannoliList(cannoliList2);
         deliveryRequest.setComment(deliveryRequestInputDto.getComment());
         deliveryRequest.setApplier(personRepository.getReferenceById(deliveryRequestInputDto.getApplier()));
         return deliveryRequestRepository.save(deliveryRequest);

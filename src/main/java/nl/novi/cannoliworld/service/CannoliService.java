@@ -12,6 +12,7 @@ public interface CannoliService {
     List<Cannoli> findCannoliListByName(String cannoliName);
 
     List<Cannoli> findCannoliListByType(String cannoliType);
+
     Cannoli getCannoli(Long id);
 
     Cannoli createCannoli(Cannoli cannoli);
@@ -20,9 +21,9 @@ public interface CannoliService {
 
     void deleteCannoli(Long id);
 
-    void assignPictureToCannoli(String fileName, Long id);
+    void assignImageToCannoli(String fileName, Long id);
 
-    List<Cannoli> findProductListByType(String productType);
+
 }
 
 
