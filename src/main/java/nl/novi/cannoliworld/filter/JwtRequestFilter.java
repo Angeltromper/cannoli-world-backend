@@ -3,6 +3,7 @@ package nl.novi.cannoliworld.filter;
 
 import nl.novi.cannoliworld.service.CustomUserDetailService;
 import nl.novi.cannoliworld.utils.JwtUtil;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,9 +26,14 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private JwtUtil jwtUtil;
+    private CustomUserDetailService customUserDetailService;
+
+    public JwtRequestFilter() {
+    }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain)
+            throws ServletException, IOException {
        final String authorizationHeader = request.getHeader("Authorization");
 
        String username = null;
@@ -39,7 +45,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
        }
 
        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-           UserDetails userDetails = this.userDetailService.loadUserByUsername(username);
+           UserDetails userDetails = this.customUserDetailService.loadUserByUsername(username);
 
            if (jwtUtil.validateToken(jwt, userDetails)) {
 

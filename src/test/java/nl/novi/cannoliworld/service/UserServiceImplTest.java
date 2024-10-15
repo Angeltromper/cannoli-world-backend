@@ -51,13 +51,5 @@ class UserServiceImplTest {
 
         userService.assignPersonToUser(person.getId(), user.getUsername());
 
-
-}
-
-
-
-
-
-
-
+    }
 }

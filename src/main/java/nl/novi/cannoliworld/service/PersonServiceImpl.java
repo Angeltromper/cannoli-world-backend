@@ -36,7 +36,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public List<Person> findPersonListByPersonLastname(String personLastname) {
 
-        var optionalPersonList = personRepository.findByPersonFirstnameContainingIgnoreCase(personLastname);
+        var optionalPersonList = personRepository.findByPersonLastnameContainingIgnoreCase(personLastname);
 
         if (optionalPersonList.isEmpty()) {
             throw new RecordNotFoundException("oeps er ging iets fout.. Gebruiker met achternaam" + personLastname + "bestaat niet..");
@@ -78,7 +78,7 @@ public class PersonServiceImpl implements PersonService {
         }else {
 
             Person person1 = optionalPerson.get();
-            person1.setId(person1.getId());
+            person1.setId(person.getId());
             person1.setPersonFirstname(person.getPersonFirstname());
             person1.setPersonLastname(person.getPersonLastname());
             person1.setPersonStreetName(person.getPersonStreetName());

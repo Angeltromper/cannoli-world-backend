@@ -15,6 +15,9 @@ public class PersonInputDto {
     public String personCity;
     public String personZipcode;
 
+    public PersonInputDto() {
+    }
+
     public Person toPerson() {
 
         var person = new Person();

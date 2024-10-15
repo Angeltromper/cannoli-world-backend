@@ -11,6 +11,10 @@ import static org.junit.jupiter.api.Assertions.*;
 class UserTest {
 
     private User user;
+
+    UserTest() {
+    }
+
     @BeforeEach
     void setUp() { user = new User(); }
 
@@ -18,7 +22,7 @@ class UserTest {
     @DisplayName("Should set the enabled to true")
     void setEnableWhenEnabledIsTrue() {
         user.setEnabled(true);
-        assertTrue(user.isEnabled());
+        assertTrue(user.IsEnabled());
     }
 
     @Test
@@ -30,9 +34,9 @@ class UserTest {
 
     @Test
     @DisplayName("Should set the apikey")
-    void setApikey() {
-        user.setApiKey("12345");
-        assertEquals("12345", user.getApikey());
+    void setApiKey() {
+        user.setApikey("123");
+        assertEquals("123",user.getApikey());
     }
 
     @Test
@@ -84,6 +88,8 @@ class UserTest {
         user.addAuthority(authority);
         assertTrue(user.getAuthorities().contains(authority));
     }
+
+
 
     @Test
     @DisplayName("Should remove the authority from the user")

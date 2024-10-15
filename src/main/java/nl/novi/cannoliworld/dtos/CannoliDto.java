@@ -20,6 +20,9 @@ public class CannoliDto {
     @JsonSerialize
     FileUploadResponse image;
 
+    public CannoliDto() {
+    }
+
     public static CannoliDto fromCannoli(Cannoli cannoli) {
 
         var dto= new CannoliDto();

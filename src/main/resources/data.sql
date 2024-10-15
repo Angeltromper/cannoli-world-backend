@@ -18,7 +18,47 @@ INSERT INTO image (file_name, content_type, url) VALUES ('hazelnoot_vegan.jpg', 
 INSERT INTO image (file_name, content_type, url) VALUES ('limoncello_vegan.jpg', 'image/jpeg', 'http://localhost:8080/images/download/limoncello_vegan.jpg');
 INSERT INTO image (file_name, content_type, url) VALUES ('pistache_vegan.jpg', 'image/jpeg', 'http://localhost:8080/images/download/pistache_vegan.jpg');
 
-INSERT INTO cannolis (cannoli_id, cannoli_name, cannoli_description, cannoli_ingredients, cannoli_price, picture_file_name) VALUES (1001, 'Cannolisnack Aardbei 100gr per stuk','Snack Cannolo filled with Crema Strawberry cream',
-'Strawberry cream 52%[sugar,vegetable fats (palm, sunflower, shea), skimmed and whole MILK powder, glucose syrup, emulsifier E322; SOY lecithin; strawberry flavor 2%, vanillin], wafer (WHEAT flour "00", sugar,salt, lard refined,
-wine, flavors). Decorated with pink sugar strands [sugar, vegetable fat (palm), glucose syrup, emulsifier: SOY lecithin; food coloring: E120; anti caking agent: talc]', '0.69 p.st groothandelprijs, gemiddeld in één doos 36 stuks,
-verpakt per omdoos is (3x1200gr) 26,24 per doos 1,2kg groothandelprijs', 'aardbei_snack.jpg');
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1001, 'Aardbei 35gr', 'Snack', 'Cannoli snack is een cannoli gevuld met zachte creme met een krokant omhulsel versierd met roze suiker spikkels',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), magere en volle melkpoeder, glucose syrup, emulsifier (E322) SOY, aardbeiensmaak (2%), vanille, tarwebloem (00), suiker, zout geraffineerd, kleurstof (E120)',0.67,'aardbei_snack.jpg');
+
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1002, 'Amandelen 35gr', 'Snack','Cannoli snack is een cannoli gevuld met zachte creme met een krokant omhulsel',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), magere en volle melkpoeder, glucose syrup, emulsifier (E322) SOY, vanille, tarwebloem (00), suiker, zout geraffineerd, kleurstof (E120)', 0.67, 'amandelen_snack.jpg');
+
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1003, 'Baileys 35gr', 'Snack', 'Cannoli snack is een cannoli gevuld met zachte creme met een krokant omhulsel',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), magere en volle melkpoeder glucose syrup, emulsifier (E322) SOY, baileys smaak (2%), vanille, tarwebloem (00), suiker, zout geraffineerd, kleurstof (E120)', 0.67, 'baileys_snack.jpg');
+
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1004, 'Banaan 35gr', 'Snack', 'Cannoli snack is een cannoli gevuld met zachte creme met een krokant omhulsel',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), magere en volle melkpoeder, glucose syrup, emulsifier (E322) SOY, bananen smaak (2%), vanille, tarwebloem (00), suiker, zout geraffineerd, kleurstof (E120)', 0.67,'banaan_snack.jpg');
+
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1005, 'Capuccino 35gr', 'Snack', 'Cannoli snack is een cannoli gevuld met zachte creme met een krokant omhulsel',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), magere en volle melkpoeder, glucose syrup, emulsifier (E322) SOY, cappucino smaak (2%), vanille, tarwebloem (00), suiker, zout geraffineerd, kleurstof (E120)', 0.67, 'capuccino_snack.jpg');
+
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1006, 'Citroen 35gr', 'Snack', 'Cannoli snack is een cannoli gevuld met zachte creme met een krokant omhulsel',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), magere en volle melkpoeder, glucose syrup, emulsifier (E322) SOY, citroen smaak (2%) vanille, tarwebloem (00), suiker, zout geraffineerd, kleurstof (E120)', 0.67, 'citroen_snack.jpg');
+
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1007, 'Cocos 35gr', 'Snack', 'Cannoli snack is een cannoli gevuld met zachte creme met een krokant omhulsel',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), magere en volle melkpoeder, glucose syrup, emulsifier (E322) SOY, cocos smaak (2%) vanille, tarwebloem (00), suiker, zout geraffineerd, kleurstof (E120)', 0.67, 'cocos_snack.jpg');
+
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1008, 'Creme Catalana 35gr', 'Snack', 'Cannoli snack is een cannoli gevuld met zachte creme met een krokant omhulsel',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), magere en volle melkpoeder, glucose syrup, emulsifier (E322) SOY, creme catalana (2%) vanille, tarwebloem (00), suiker, zout geraffineerd, kleurstof (E120)', 0.67, 'creme_catalana_snack.jpg');
+
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1009, 'Bosvruchten 35gr', 'Glutenfree', 'Cannoli glutenfree is een cannoli gevuld met zachte creme met een krokant omhulsel',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), magere en volle melkpoeder, glucose syrup, emulsifier (E322) SOY, bosvruchten smaak (2%) vanille, tarwebloem (00), suiker, zout geraffineerd, kleurstof (E120)', 0.67, 'bosvruchten_snack.jpg');
+
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1010, 'Hazelnoot 35gr', 'Glutenfree', 'Cannoli glutenfree is een cannoli gevuld met zachte creme met een krokant almond omhulsel',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), hazelnoot pasta (10%), magere en volle melkpoeder, glucose syrup, emulsifier (E322) SOY, hazelnoot (2%), ALMONDS (32%), suiker, zout geraffineerd, kleurstof (E120)', 0.67, 'hazelnoot_snack.jpg');
+
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1011, 'Limoncello 35gr', 'Glutenfree', 'Cannoli glutenfree is een cannoli gevuld met zachte creme met een krokant omhulsel',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), magere en volle melkpoeder, glucose syrup, emulsifier (E322) SOY, limoncello (2%) vanille, tarwebloem (00), suiker, zout geraffineerd, kleurstof (E120)', 0.67, 'limoncello_snack.jpg');
+
+INSERT INTO cannolis (cannolis_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, cannoli_file_name) VALUES (1012, 'Pistache 35gr', 'Glutenfree', 'Cannoli glutenfree is een cannoli gevuld met zachte creme met een krokant omhulsel',
+'Creme (52%), sugar, plantaardige vetten (palm, zonnebloem, shea), magere en volle melkpoeder, glucose syrup, emulsifier (E322) SOY, pistache (2%) vanille, tarwebloem (00), suiker, zout geraffineerd, kleurstof (E120)', 0.67, 'pistache_snack.jpg');
+
+INSERT INTO person (id, person_firstname, person_lastname, person_street_name, person_house_number, person_house_number_add, person_city, person_zipcode) VALUES (1001, 'Admin', '', '', '', '', '', '');
+INSERT INTO person (id, person_firstname, person_lastname, person_street_name, person_house_number, person_house_number_add, person_city, person_zipcode) VALUES (1002, 'Angel', '', '', '', '', '', '');
+
+INSERT INTO users (username, id, password, emailadress, enabled, person_id, image_file_name) VALUES ('admin', 1001, '', '', '', '', '');
+INSERT INTO users (username, id, password, emailadress, enabled, person_id, image_file_name) VALUES ('angel', 1002, '', '', '', '', '');
+
+INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_ADMIN');
+INSERT INTO authorities (username, authority) VALUES ('angel', 'ROLE_USER');

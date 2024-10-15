@@ -23,14 +23,17 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    public CustomUserDetailService customUserDetailsService;
+    public CustomUserDetailService customUserDetailService;
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
+    public SpringSecurityConfig() {
+    }
+
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailsService);
+        auth.userDetailsService(customUserDetailService);
     }
 
     @Override
@@ -57,7 +60,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/users/{username}").permitAll()
                 .antMatchers(HttpMethod.PUT, "/users/{username}").permitAll()
                 .antMatchers(HttpMethod.PUT, "/users/{username}/{id}").permitAll()
-                .antMatchers(HttpMethod.PUT, "/users/{username}/picture").permitAll()
+                .antMatchers(HttpMethod.PUT, "/users/{username}/image").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/users/delete/{username}").hasRole("ADMIN")
 
                 .antMatchers(HttpMethod.GET, "/persons/").hasRole("ADMIN")

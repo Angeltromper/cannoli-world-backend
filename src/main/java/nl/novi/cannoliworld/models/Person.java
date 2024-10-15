@@ -1,24 +1,44 @@
 package nl.novi.cannoliworld.models;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 public class Person {
 
+
+
+    @Getter
     @GeneratedValue
     @Id
     Long id;
 
+    @Setter
+    @Getter
     String personFirstname;
+    @Setter
+    @Getter
     String personLastname;
+    @Setter
+    @Getter
     String personStreetName;
+    @Setter
+    @Getter
     String personHouseNumber;
+    @Getter
+    @Setter
     String personHouseNumberAdd;
+    @Getter
+    @Setter
     String personCity;
+    @Getter
+    @Setter
     String personZipcode;
 
-    @OneToOne()
+    @OneToOne(mappedBy = "person")
     User user;
 
     @OneToMany(mappedBy = "applier")
@@ -30,37 +50,7 @@ public class Person {
     public Person() {
     }
 
-    public Long getId() { return id; }
-
-    public void setId(Long id) { this.id = id; }
-
-    public String getPersonFirstname() { return personFirstname; }
-
-    public void setPersonFirstname(String firstname) { this.personFirstname = firstname; }
-
-    public String getPersonLastname() { return personLastname; }
-
-    public void setPersonLastname(String lastname) { this.personLastname = lastname; }
-
-    public String getPersonStreetName() { return personStreetName; }
-
-    public void setPersonStreetName(String streetName) { this.personStreetName = streetName; }
-
-    public String getPersonHouseNumber() { return personHouseNumber; }
-
-    public void setPersonHouseNumber(String houseNumber) { this.personHouseNumber = houseNumber; }
-
-    public String getPersonHouseNumberAdd() { return personHouseNumberAdd; }
-
-    public void setPersonHouseNumberAdd(String houseNumberAdd) { this.personHouseNumberAdd = houseNumberAdd; }
-
-    public String getPersonCity() { return personCity; }
-
-    public void setPersonCity(String city) { this.personCity = city; }
-
-    public String getPersonZipcode() { return personZipcode; }
-
-    public void setPersonZipcode(String zipcode) { this.personZipcode = zipcode; }
-
-
+    public void setId(Long id) {
+    }
 }
+

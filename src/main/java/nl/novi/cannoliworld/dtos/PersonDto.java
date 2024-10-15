@@ -12,6 +12,9 @@ public class PersonDto {
     public String personCity;
     public String personZipcode;
 
+    public PersonDto() {
+    }
+
     public static PersonDto fromPerson(Person person) {
         if (person == null) return null;
 

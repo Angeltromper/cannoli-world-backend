@@ -41,16 +41,16 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PhotoService photoService;
 
+    public UserServiceImpl() {
+    }
 
     @Override
     public List<User> getUsers() { return userRepository.findAll(); }
-
 
     @Override
     public Collection<User> getUser() {
         return userRepository.findAll();
     }
-
 
     @Override
     public Optional<User> getUser(String username) {
@@ -78,7 +78,6 @@ public class UserServiceImpl implements UserService {
         User newUser = userRepository.save(user);
 
         return newUser.getUsername();
-
     }
 
 

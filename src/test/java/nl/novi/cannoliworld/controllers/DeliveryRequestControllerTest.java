@@ -28,6 +28,9 @@ class DeliveryRequestControllerTest {
     @InjectMocks
     private DeliveryRequestController deliveryRequestController;
 
+    DeliveryRequestControllerTest() {
+    }
+
     @Test
     @DisplayName("Should update the status of the delivery request")
     void updateDeliveryRequestWhenStatusIsUpdated() {

@@ -22,7 +22,7 @@ class PhotoControllerTest {
     private PhotoService photoService;
 
     @InjectMocks
-    private PhotoController photoController;
+    private PersonController.PhotoController photoController;
 
     private String fileStorageLocation = "src/test/resources/";
 

@@ -19,10 +19,10 @@ import java.util.List;
 
 public class CannoliController {
     private final CannoliService cannoliService;
-    private final PhotoController photoController;
+    private final PersonController.PhotoController photoController;
 
     @Autowired
-    public CannoliController(CannoliService cannoliService, PhotoController photoController) {
+    public CannoliController(CannoliService cannoliService, PersonController.PhotoController photoController) {
         this.cannoliService = cannoliService;
         this.photoController = photoController;
     }

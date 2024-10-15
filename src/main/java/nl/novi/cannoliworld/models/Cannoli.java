@@ -1,15 +1,16 @@
 package nl.novi.cannoliworld.models;
 
-import org.hibernate.annotations.TypeDef;
+
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
+@Setter
+@Getter
 @Entity
-/*
-@TypeDef(name = "json", typeClass = JsonStringType.class)
-*/
-
 @Table(name = "cannolis")
+
 
 public class Cannoli {
 
@@ -41,31 +42,8 @@ public class Cannoli {
     @OneToOne
     FileUploadResponse image;
 
-    public Long getId() { return id; }
+    public Cannoli() {
+    }
 
-    public String getCannoliName() { return cannoliName; }
-
-    public String getCannoliType() { return cannoliType; }
-
-    public String getDescription() { return description; }
-
-    public String getIngredients() { return ingredients; }
-
-    public double getPrice() { return price; }
-
-    public FileUploadResponse getImage()  { return image; }
-    public void setImage(FileUploadResponse image) { this.image = image; }
-
-    public void setId(Long id) { this.id = id; }
-
-    public void setCannoliName(String cannoliName) { this.cannoliName = cannoliName; }
-
-    public void setCannoliType(String cannoliType) { this.cannoliType = cannoliType; }
-
-    public void setDescription(String description) { this.description = description; }
-
-    public void setIngredients(String ingredients) { this.ingredients = ingredients; }
-
-    public void setPrice(double price) { this.price = price; }
 }
 

@@ -2,10 +2,11 @@ package nl.novi.cannoliworld.service;
 
 import nl.novi.cannoliworld.dtos.DeliveryRequestInputDto;
 import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
-import nl.novi.cannoliworld.models.Cannoli;
 import nl.novi.cannoliworld.models.DeliveryRequest;
+import nl.novi.cannoliworld.models.Cannoli;
 import nl.novi.cannoliworld.models.Status;
 import nl.novi.cannoliworld.repositories.DeliveryRequestRepository;
+import nl.novi.cannoliworld.repositories.PersonRepository;
 import nl.novi.cannoliworld.repositories.CannoliRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,6 +34,9 @@ class DeliveryRequestServiceImplTest {
     @InjectMocks
     private DeliveryRequestServiceImpl deliveryRequestService;
 
+    DeliveryRequestServiceImplTest() {
+    }
+
     @Test
     @DisplayName("Should return the delivery request when the delivery request exists")
     void getDeliveryRequestWhenDeliveryRequestExist() {
@@ -45,7 +49,7 @@ class DeliveryRequestServiceImplTest {
         DeliveryRequest result = deliveryRequestService.getDeliveryRequest(1L);
 
         assertEquals(1L, result.getId());
-        assertEquals(Status.AVAILABLE, ((DeliveryRequest) result).getStatus());
+        assertEquals(Status.AVAILABLE, result.getStatus());
     }
 
     @Test
