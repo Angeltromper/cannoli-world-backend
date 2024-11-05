@@ -1,7 +1,7 @@
 package nl.novi.cannoliworld.filter;
 
 
-import nl.novi.cannoliworld.service.CustomerUserDetailsService;
+import nl.novi.cannoliworld.service.CustomUserDetailService;
 import nl.novi.cannoliworld.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
-    private CustomerUserDetailsService userDetailService;
+    private CustomUserDetailService userDetailService;
 
     @Autowired
     private JwtUtil jwtUtil;

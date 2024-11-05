@@ -1,7 +1,7 @@
 package nl.novi.cannoliworld.config;
 
 import nl.novi.cannoliworld.filter.JwtRequestFilter;
-import nl.novi.cannoliworld.service.CustomerUserDetailsService;
+import nl.novi.cannoliworld.service.CustomUserDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,7 +22,7 @@ import javax.servlet.Filter;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    public CustomerUserDetailsService customUserDetailsService;
+    public CustomUserDetailService customUserDetailsService;
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
