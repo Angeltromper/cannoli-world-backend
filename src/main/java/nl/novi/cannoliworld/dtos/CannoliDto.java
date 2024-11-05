@@ -18,7 +18,10 @@ public class CannoliDto {
     public double price;
 
     @JsonSerialize
-    FileUploadResponse picture;
+    FileUploadResponse image;
+
+    public CannoliDto() {
+    }
 
     public static CannoliDto fromCannoli(Cannoli cannoli) {
 
@@ -36,7 +39,7 @@ public class CannoliDto {
 
         dto.price = cannoli.getPrice();
 
-        dto.picture = cannoli.getPicture();
+        dto.image = cannoli.getImage();
 
         return dto;
     }

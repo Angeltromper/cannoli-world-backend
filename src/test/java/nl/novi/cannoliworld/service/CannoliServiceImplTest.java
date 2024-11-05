@@ -79,7 +79,7 @@ class CannoliServiceImplTest {
 
     @Test
     @DisplayName("Should returns a list of cannolis when the cannoli type is found")
-    void findProductListByTypeWhenProductTypeIsFoundThenReturnsAListOfProducts() {
+    void findCannoliListByTypeWhenCannoliTypeIsFoundThenReturnsAListOfCannolis() {
         String cannoliType = "glutenfree";
         Cannoli cannoli = new Cannoli();
         cannoli.setCannoliType(cannoliType);
@@ -92,7 +92,8 @@ class CannoliServiceImplTest {
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
-        assertEquals(cannoliType, result.get(0).getCannoliType());
+        assertEquals(cannoliType,result.get(0).getCannoliType());
+
     }
 
     @Test
@@ -102,7 +103,7 @@ class CannoliServiceImplTest {
 
         assertThrows(
                 RecordNotFoundException.class,
-                () -> cannoliService.findProductListByType(cannoliType));
+                () -> cannoliService.findCannoliListByType(cannoliType));
 
         verify(cannoliRepository, times(1)).findByCannoliTypeContainingIgnoreCase(cannoliType);
     }

@@ -110,18 +110,18 @@ public class CannoliServiceImpl implements CannoliService {
 
 
     @Override
-    public void assignPictureToCannoli(String fileName, Long id) {
+    public void assignImageToCannoli(String fileName, Long id) {
 
         var optionalCannoli = cannoliRepository.findById(id);
-        var optionalPicture = fileUploadRepository.findByFileName(fileName);
+        var optionalImage = fileUploadRepository.findByFileName(fileName);
 
-        if (optionalCannoli.isPresent() && optionalPicture.isPresent()) {
-            var product = optionalCannoli.get();
-            var picture = optionalPicture.get();
+        if (optionalCannoli.isPresent() && optionalImage.isPresent()) {
+            var cannoli = optionalCannoli.get();
+            var image = optionalImage.get();
 
-            product.setPicture(picture);
+            cannoli.setImage(image);
 
-            cannoliRepository.save(product);
+            cannoliRepository.save(cannoli);
 
         } else {
 
@@ -129,9 +129,7 @@ public class CannoliServiceImpl implements CannoliService {
         }
     }
 
-    public List<Cannoli> findProductListByType(String productType) {
-        return null;
-    }
+
 }
 
 

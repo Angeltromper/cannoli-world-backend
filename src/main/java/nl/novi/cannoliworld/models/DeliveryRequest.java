@@ -1,59 +1,59 @@
 package nl.novi.cannoliworld.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.Type;
+import lombok.Getter;
+import lombok.Setter;
+
 
 import javax.persistence.*;
-import java.util.Map;
 
+/*
+import java.util.Map;
+*/
+
+@Setter
+@Getter
 @Entity
 public class DeliveryRequest {
 
-    @Id
-    @GeneratedValue(strategy =  GenerationType.AUTO)
-    private Long id;
+ @Getter
+ @Id
+ @GeneratedValue(strategy = GenerationType.AUTO)
+ private Long id;
 
-    @Type(type = "json")
-    @SuppressWarnings("JpaAttributeTypeInspection")
-    private Map<Long, String> cannoliList;
 
-    private Status status;
+/*
+ @Getter
+ @SuppressWarnings("JpaAttributeTypeInspection")
+ private Map<Long, String> cannoliList;
+*/
 
-    private String comment;
 
-    @JsonIgnore
-    @ManyToOne(cascade = CascadeType.PERSIST)
-    private Person applier;
+ private String cannoliList;
 
-    @JsonIgnore
-    @ManyToOne
-    private Person deliverer;
 
-    public DeliveryRequest() {
-    }
+ @Getter
+ private Status status;
 
-    public Long getId() { return id; }
+ @Getter
+ private String comment;
 
-    public void setId(Long id) { this.id = id; }
+ @Getter
+ @JsonIgnore
+ @ManyToOne(cascade = CascadeType.PERSIST)
+ private Person applier;
 
-    public Map<Long, String> getCannoliList() { return cannoliList; }
+ @JsonIgnore
+ @ManyToOne
+ private Person deliverer;
 
-    public void setCannoliList(Map<Long, String> cannoliList) { this.cannoliList = cannoliList; }
+ public DeliveryRequest() {
+ }
 
-    public Status getStatus() { return status; }
-
-    public Person getApplier() { return applier; }
-
-    public void setApplier(Person applier) { this.applier = applier; }
-
-    public Person getDeliverer() { return deliverer; }
-
-    public void setDeliverer(Person deliverer) { this.deliverer = deliverer; }
-
-    public String getComment() { return comment; }
-
-    public void setComment(String comment) { this.comment = comment; }
-
-    public void setStatus(Status status) {
-    }
 }
+
+
+
+
+
+

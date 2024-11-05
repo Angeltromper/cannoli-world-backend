@@ -7,4 +7,7 @@ public class AuthorityKey implements Serializable {
     private String username;
 
     private String authority;
+
+    public AuthorityKey() {
+    }
 }

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @CrossOrigin
@@ -18,14 +19,11 @@ public class UserController {
 
     private final UserService userService;
 
-    private final PersonService personService;
-
-    private final PhotoController photoController;
+    private final PersonController.PhotoController photoController;
 
     @Autowired
-    public UserController(UserService userService, PhotoController photoController, PersonService personService) {
+    public UserController(UserService userService, PersonController.PhotoController photoController, PersonService personService) {
         this.userService = userService;
-        this.personService = personService;
         this.photoController = photoController;
     }
 
@@ -42,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/create")
-    public ResponseEntity<Object> createUser(@RequestBody User user) {
+    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
 
         String newUsername = userService.createUser(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}")
@@ -66,19 +64,19 @@ public class UserController {
         userService.assignPersonToUser(personId, username);
     }
 
-    @PutMapping("/{username}/picture/{fileName}")
-    public void assignPictureToUser(@PathVariable("username") String username,
+    @PutMapping("/{username}/image/{fileName}")
+    public void assignImageToUser(@PathVariable("username") String username,
                                     @PathVariable("fileName") String fileName) {
 
-        userService.assignPictureToUser(username, fileName);
+        userService.assignImageToUser(username, fileName);
     }
 
-    @PutMapping("/{username}/picture")
-    public void uploadPictureToUser(@PathVariable("username") String username,
+    @PutMapping("/{username}/image")
+    public void uploadImageToUser(@PathVariable("username") String username,@Valid
                                     @RequestBody MultipartFile file) {
 
         photoController.singleFileUpload(file);
-        userService.assignPictureToUser(file.getOriginalFilename(), username);
+        userService.assignImageToUser(file.getOriginalFilename(), username);
     }
 }
 

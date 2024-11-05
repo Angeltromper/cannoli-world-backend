@@ -1,11 +1,15 @@
 package nl.novi.cannoliworld.dtos;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import lombok.Getter;
+import lombok.Setter;
 import nl.novi.cannoliworld.models.Authority;
 import nl.novi.cannoliworld.models.Person;
 
 import java.util.Set;
 
+@Setter
+@Getter
 public class UserDto {
 
     public String username;
@@ -16,21 +20,8 @@ public class UserDto {
 
     public String password;
 
-    public String getUsername() { return username; }
-
-    public void setUsername(String username) { this.username = username; }
-
-    public String getEmailAdress() { return emailAdress; }
-
-    public void setEmailAdress(String emailAdress) { this.emailAdress = emailAdress; }
-
-    public String getPassword() { return password; }
-
-    public void setPassword(String password) { this.password = password; }
-
-    public Set<Authority>  getAuthorities() { return authorities; }
-
-    public void setAuthorities(Set<Authority> authorities) { this.authorities = authorities; }
+    public UserDto() {
+    }
 
     public boolean isEmpty() {
         return false;

@@ -27,6 +27,9 @@ class PersonServiceImplTest {
     @InjectMocks
     private PersonServiceImpl personService;
 
+    PersonServiceImplTest() {
+    }
+
     @Test
     @DisplayName("Should save the person when the person is not taken")
     void savePersonWhenPersonIsNotTaken() {
@@ -61,13 +64,13 @@ class PersonServiceImplTest {
         person1.setPersonZipcode("test");
         when(personRepository.findById(1L)).thenReturn(java.util.Optional.of(person1));
 
-        person1.setPersonFirstname("Angelique");
+        person1.setPersonFirstname("Angel");
         personService.updatePerson(1L, person1);
 
         verify(personRepository).save(person1);
 
         assertThat(person1.getId()).isEqualTo(1);
-        assertThat(person1.getPersonFirstname()).isEqualTo("Angelique");
+        assertThat(person1.getPersonFirstname()).isEqualTo("Angel");
     }
 
     @Test
@@ -165,6 +168,4 @@ class PersonServiceImplTest {
         assertEquals(2, result.size());
         verify(personRepository, times(1)).findAll();
     }
-
-
 }

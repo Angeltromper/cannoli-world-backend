@@ -37,7 +37,7 @@ class PersonControllerTest {
         person.setPersonFirstname("Maria");
         person.setPersonLastname("Kopers");
         person.setPersonStreetName("Straat");
-        person.setPersonHouseNumber("2");
+        person.setPersonHouseNumber("1");
         person.setPersonHouseNumberAdd("a");
         person.setPersonCity("Amsterdam");
         person.setPersonZipcode("1248RL");
@@ -73,7 +73,7 @@ class PersonControllerTest {
         person.setPersonFirstname("Angelique");
         person.setPersonLastname("Tromper");
         person.setPersonStreetName("Spaandammerdijk");
-        person.setPersonHouseNumber("320");
+        person.setPersonHouseNumber("1");
         person.setPersonHouseNumberAdd("a");
         person.setPersonCity("Amsterdam");
         person.setPersonZipcode("1014AA");
@@ -87,7 +87,7 @@ class PersonControllerTest {
         assertEquals("Angelique", result.personFirstname);
         assertEquals("Tromper", result.personLastname);
         assertEquals("Spaandammerdijk", result.personStreetName);
-        assertEquals("320", result.personHouseNumber);
+        assertEquals("1", result.personHouseNumber);
         assertEquals("a", result.personHouseNumberAdd);
         assertEquals("Amsterdam", result.personCity);
         assertEquals("1014AA", result.personZipcode);
@@ -98,18 +98,18 @@ class PersonControllerTest {
     void getPersonListWhenNoParaMetersAreGivenThenReturnAllPersons() {
       var person1 = new Person();
       person1.setId(1L);
-      person1.setPersonFirstname("");
-      person1.setPersonLastname("");
+      person1.setPersonFirstname("Maria");
+      person1.setPersonLastname("Kopers");
 
         var person2 = new Person();
         person2.setId(2L);
-        person2.setPersonFirstname("");
-        person2.setPersonLastname("");
+        person2.setPersonFirstname("Loes");
+        person2.setPersonLastname("Bloemendaal");
 
         var person3 = new Person();
         person3.setId(3L);
-        person3.setPersonFirstname("");
-        person3.setPersonLastname("");
+        person3.setPersonFirstname("Frans");
+        person3.setPersonLastname("Spaans");
 
         var persons = List.of(person1, person2, person3);
 
@@ -119,7 +119,6 @@ class PersonControllerTest {
 
         assertEquals(3, result.size());
     }
-
 }
 
 

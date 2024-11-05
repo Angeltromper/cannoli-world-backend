@@ -1,55 +1,51 @@
 package nl.novi.cannoliworld.dtos;
 
+/*
 import java.util.Map;
+*/
+
+import lombok.Getter;
+import lombok.Setter;
 import nl.novi.cannoliworld.models.DeliveryRequest;
 import nl.novi.cannoliworld.models.Status;
 
+
+
+@Setter
+@Getter
 public class DeliveryRequestDto {
 
     private Long id;
+/*
+    @SuppressWarnings("JpaAttributeTypeInspection")
+    */
 
-   @SuppressWarnings("JpaAttributeTypeInspection")
-   private Map<Long, String> cannoliList;
-   private Status status;
-   private String comment;
-   private PersonDto applier;
+    private String cannoliList;
+    private Status status;
+    private String comment;
+    private PersonDto applier;
 
-   public static DeliveryRequestDto fromDeliveryRequest(DeliveryRequest deliveryRequest) {
+    public DeliveryRequestDto() {
+    }
 
-       var dto = new DeliveryRequestDto();
+    public static DeliveryRequestDto fromDeliveryRequest(DeliveryRequest deliveryRequest) {
 
-       dto.setId(deliveryRequest.getId());
+        var dto = new DeliveryRequestDto();
 
-       dto.setCannoliList(deliveryRequest.getCannoliList());
+        dto.setId(deliveryRequest.getId());
 
-       dto.setStatus(deliveryRequest.getStatus());
+        dto.setCannoliList(deliveryRequest.getCannoliList());
 
-       dto.setComment(deliveryRequest.getComment());
+        dto.setStatus(deliveryRequest.getStatus());
 
-       dto.setApplier(PersonDto.fromPerson(deliveryRequest.getApplier()));
+        dto.setComment(deliveryRequest.getComment());
 
-       return dto;
-   }
+        dto.setApplier(PersonDto.fromPerson(deliveryRequest.getApplier()));
 
-   public Long getId() { return id; }
+        return dto;
 
-    public void setId(Long id) { this.id = id; }
-
-    public Map<Long, String> getCannoliList() { return cannoliList; }
-
-    public void setCannoliList(Map<Long, String> cannoliList) { this.cannoliList = cannoliList; }
-
-    public Status getStatus() { return status; }
-
-    public void setStatus(Status status) { this.status = status; }
-
-    public String getComment() { return comment; }
-
-    public void setComment(String comment) { this.comment = comment; }
-
-    public PersonDto getApplier() { return applier; }
-
-    public void setApplier(PersonDto applier) { this.applier = applier; }
+    }
 
 }
 
+        

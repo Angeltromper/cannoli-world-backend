@@ -3,6 +3,9 @@ package nl.novi.cannoliworld.utils;
 import java.util.Random;
 
 public class RandomStringGenerator {
+    public RandomStringGenerator() {
+    }
+
     public static String generateAlphaNumeric(int length) {
 
         int leftLimit = 48; // numeral '0'

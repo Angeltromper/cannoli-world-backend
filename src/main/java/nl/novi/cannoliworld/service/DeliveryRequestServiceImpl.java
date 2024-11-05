@@ -1,15 +1,16 @@
 package nl.novi.cannoliworld.service;
 
 import nl.novi.cannoliworld.dtos.DeliveryRequestInputDto;
-import nl.novi.cannoliworld.dtos.DeliveryRequestInputDto;
 import nl.novi.cannoliworld.dtos.DeliveryRequestStatusDto;
 import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
 import nl.novi.cannoliworld.models.DeliveryRequest;
 import nl.novi.cannoliworld.models.Cannoli;
+import nl.novi.cannoliworld.models.Status;
 import nl.novi.cannoliworld.repositories.DeliveryRequestRepository;
-import nl.novi.cannoliworld.repositories.CannoliRepository;
 import nl.novi.cannoliworld.repositories.PersonRepository;
+import nl.novi.cannoliworld.repositories.CannoliRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -18,7 +19,6 @@ import java.util.*;
 
 @Transactional
 @Service
-
 public class DeliveryRequestServiceImpl implements DeliveryRequestService {
 
     private final PersonRepository personRepository;
@@ -44,7 +44,6 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
             return deliveryRequest.get();
         } else {
             throw new RecordNotFoundException("deliveryRequest niet gevonden");
-
         }
     }
 
@@ -52,7 +51,14 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
     public DeliveryRequest createDeliveryRequest(DeliveryRequestInputDto deliveryRequestInputDto) {
         DeliveryRequest deliveryRequest = new DeliveryRequest();
 
+
+        /*
         Map<Long, String> cannoliList2 = new HashMap<>();
+        */
+
+
+        Map<Long, String> cannoliList2 = new HashMap<>();
+
         List<Long> cannoliListLong = deliveryRequestInputDto.getCannoliList();
 
         for (Long cannoli : cannoliListLong) {
@@ -74,8 +80,8 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
                 cannoliList2.put(cannoli, actualQuantity + "-x" + optional.get().getCannoliName() + "-" + '_' + '€' + bigDecimalWithScale);
             }
         }
-        deliveryRequest.setStatus(deliveryRequestInputDto.getStatus().AVAILABLE);
-        deliveryRequest.setCannoliList(cannoliList2);
+        deliveryRequest.setStatus(Status.AVAILABLE);
+        deliveryRequest.setCannoliList(cannoliList2.toString());
         deliveryRequest.setComment(deliveryRequestInputDto.getComment());
         deliveryRequest.setApplier(personRepository.getReferenceById(deliveryRequestInputDto.getApplier()));
         return deliveryRequestRepository.save(deliveryRequest);
