@@ -43,7 +43,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -79,19 +78,19 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/cannolis/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/cannolis/{id}**").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/deliveryRequests/all").permitAll()
+ /*             .antMatchers(HttpMethod.GET, "/deliveryRequests/all").permitAll()*/
+
                 .antMatchers(HttpMethod.GET, "/deliveryRequests/{id}").permitAll()
                 .antMatchers(HttpMethod.POST, "/deliveryRequests/create").permitAll()
                 .antMatchers(HttpMethod.PUT, "/deliveryRequests/{id}").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/deliveryRequests/delete/{id}").hasRole("ADMIN")
 
                 .antMatchers(HttpMethod.GET, "/images/upload").permitAll()
-                .antMatchers(HttpMethod.GET, "/images/download/{fileName").permitAll()
+                .antMatchers(HttpMethod.GET, "/images/download/{fileName}").permitAll()
                 .antMatchers(HttpMethod.GET, "/images/delete").hasRole("ADMIN")
 
                 .antMatchers("/authenticate").permitAll()
                 .and()
-
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);

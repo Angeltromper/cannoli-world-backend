@@ -121,8 +121,8 @@ Dit zijn de geconfigureerde testgebruikers. Username + wachtwoord.
 1. brand - password
 
 **ADMIN**
-1.admin - password
-
+1.admin - passwordg
+ 
 ## Cannoli een onvergetelijk Italiaanse delicatesse
 
 Cannoli is een onvergetelijk Italiaanse delicatesse. Een koekje gevuld met een cremé in diverse smaken.

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.validation.Valid;
+
 import java.net.URI;
 
 @CrossOrigin
@@ -19,10 +19,10 @@ public class UserController {
 
     private final UserService userService;
 
-    private final PersonController.PhotoController photoController;
+    private final PhotoController photoController;
 
     @Autowired
-    public UserController(UserService userService, PersonController.PhotoController photoController, PersonService personService) {
+    public UserController(UserService userService, PhotoController photoController) {
         this.userService = userService;
         this.photoController = photoController;
     }
@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PostMapping(value = "/create")
-    public ResponseEntity<Object> createUser(@Valid @RequestBody User user) {
+    public ResponseEntity<Object> createUser(@RequestBody User user) {
 
         String newUsername = userService.createUser(user);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{username}")
@@ -72,7 +72,7 @@ public class UserController {
     }
 
     @PutMapping("/{username}/image")
-    public void uploadImageToUser(@PathVariable("username") String username,@Valid
+    public void uploadImageToUser(@PathVariable("username") String username,
                                     @RequestBody MultipartFile file) {
 
         photoController.singleFileUpload(file);

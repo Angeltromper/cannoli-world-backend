@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.Objects;
@@ -18,16 +17,17 @@ import java.util.Objects;
 
 @RestController
 @CrossOrigin
+@RequestMapping("/images")
 public class PhotoController {
 
     private final PhotoService service;
 
     public PhotoController(PhotoService service) { this.service = service; }
 
-    @PostMapping("/upload")
-    FileUploadResponse singleFileUpload(@RequestParam("image") MultipartFile file) {
+    @PutMapping("/upload")
+    FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file) {
 
-        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/download/").path(Objects.requireNonNull(file.getOriginalFilename())).toUriString();
+        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("images/download/").path(Objects.requireNonNull(file.getOriginalFilename())).toUriString();
         String contentType = file.getContentType();
         String fileName = service.storeFile(file, url);
         return new FileUploadResponse(fileName, contentType, url );
@@ -53,7 +53,8 @@ public class PhotoController {
 
             return ResponseEntity.noContent().build();
         }
-    }
+
+}
 
 
 

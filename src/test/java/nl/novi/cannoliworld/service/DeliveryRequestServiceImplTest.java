@@ -31,11 +31,11 @@ class DeliveryRequestServiceImplTest {
     @Mock
     private CannoliRepository cannoliRepository;
 
+    @Mock
+    private PersonRepository personRepository;
+
     @InjectMocks
     private DeliveryRequestServiceImpl deliveryRequestService;
-
-    DeliveryRequestServiceImplTest() {
-    }
 
     @Test
     @DisplayName("Should return the delivery request when the delivery request exists")

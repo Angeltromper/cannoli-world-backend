@@ -1,17 +1,13 @@
 package nl.novi.cannoliworld.models;
 
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Setter
-@Getter
+
 @Entity
 @IdClass(AuthorityKey.class)
 @Table(name = "authorities")
-
 public class Authority implements Serializable {
 
     @Id
@@ -29,5 +25,12 @@ public class Authority implements Serializable {
         this.username = username;
         this.authority = authority;
     }
+
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+
+    public String getAuthority() { return authority; }
+
+    public void setAuthority(String authority) { this.authority = authority; }
 
 }

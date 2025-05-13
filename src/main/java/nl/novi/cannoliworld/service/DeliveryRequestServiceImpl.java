@@ -80,7 +80,7 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
                 cannoliList2.put(cannoli, actualQuantity + "-x" + optional.get().getCannoliName() + "-" + '_' + '€' + bigDecimalWithScale);
             }
         }
-        deliveryRequest.setStatus(Status.AVAILABLE);
+        deliveryRequest.setStatus(deliveryRequestInputDto.getStatus().AVAILABLE);
         deliveryRequest.setCannoliList(cannoliList2.toString());
         deliveryRequest.setComment(deliveryRequestInputDto.getComment());
         deliveryRequest.setApplier(personRepository.getReferenceById(deliveryRequestInputDto.getApplier()));

@@ -36,7 +36,7 @@ class UserControllerTest {
         User user = new User();
         user.setUsername("Angeltr");
         user.setPassword("Angeltr123");
-        user.setEmailAdress("test@test.nl");
+        user.setEmail("test@test.nl");
 
         ResponseEntity<Object> response = userController.createUser(user);
 

@@ -1,6 +1,5 @@
 package nl.novi.cannoliworld.service;
 
-import nl.novi.cannoliworld.dtos.UserDto;
 import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
 import nl.novi.cannoliworld.exeptions.UsernameAlreadyExistException;
 import nl.novi.cannoliworld.models.Authority;
@@ -16,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 
 @Transactional
@@ -36,19 +34,14 @@ public class UserServiceImpl implements UserService {
     private PersonRepository personRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private PhotoService photoService;
 
-    public UserServiceImpl() {
-    }
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     @Override
-    public List<User> getUsers() { return userRepository.findAll(); }
-
-    @Override
-    public Collection<User> getUser() {
+    public Collection<User> getUsers() {
         return userRepository.findAll();
     }
 
@@ -66,10 +59,10 @@ public class UserServiceImpl implements UserService {
         }
 
         String randomString = RandomStringGenerator.generateAlphaNumeric(20);
-        user.setEmailAdress(user.getEmailAdress());
+        user.setEmail(user.getEmail());
         user.setApikey(randomString);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.getAuthorities().clear();
+        user.getRoles().clear();
         user.addAuthority(new Authority(user.getUsername(), "ROLE_USER"));
         user.setId((long) ((getUsers().size()) + 1));
 

@@ -1,17 +1,10 @@
 package nl.novi.cannoliworld.models;
 
-
-import lombok.Getter;
-import lombok.Setter;
-
+import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 
-@Setter
-@Getter
 @Entity
 @Table(name = "cannolis")
-
-
 public class Cannoli {
 
     @Id
@@ -42,8 +35,42 @@ public class Cannoli {
     @OneToOne
     FileUploadResponse image;
 
-    public Cannoli() {
-    }
+    public Long getId() { return id; }
+
+    public String getCannoliName() { return cannoliName; }
+
+    public String getCannoliType() { return cannoliType; }
+
+    public String getDescription() { return description; }
+
+    public String getIngredients() { return ingredients; }
+
+    public double getPrice() { return price; }
+
+    public FileUploadResponse getImage() { return image; }
+
+    public void setImage(FileUploadResponse image) {this.image = image; }
+
+    public void setId(Long id) { this.id = id; }
+
+    public void setCannoliName(String cannoliName) { this.cannoliName = cannoliName; }
+
+    public void setCannoliType(String cannoliType) { this.cannoliType = cannoliType; }
+
+    public void setDescription(String description) { this.description = description; }
+
+    public void setIngredients(String ingredients) { this.ingredients = ingredients; }
+
+    public void setPrice(double price) { this.price = price; }
 
 }
+
+
+
+
+
+
+
+
+
 

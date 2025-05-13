@@ -14,7 +14,7 @@ public class CannoliDto {
     public String cannoliName;
     public String cannoliType;
     public String description;
-    public String ingedrients;
+    public String ingredients;
     public double price;
 
     @JsonSerialize
@@ -35,7 +35,7 @@ public class CannoliDto {
 
         dto.description = cannoli.getDescription();
 
-        dto.ingedrients = cannoli.getIngredients();
+        dto.ingredients = cannoli.getIngredients();
 
         dto.price = cannoli.getPrice();
 
