@@ -117,11 +117,8 @@ Dit zijn de geconfigureerde testgebruikers. Username + wachtwoord.
 **USER**
 1. user - password
 
-**BRAND**
-1. brand - password
-
 **ADMIN**
-1.admin - passwordg
+1.admin - password
  
 ## Cannoli een onvergetelijk Italiaanse delicatesse
 
