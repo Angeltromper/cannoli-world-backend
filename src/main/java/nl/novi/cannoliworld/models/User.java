@@ -1,49 +1,41 @@
 package nl.novi.cannoliworld.models;
 
-import lombok.Getter;
-import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-@Getter
 @Entity
+@Table(name= "users")
+public class User implements UserDetails {
 
-public class User {
-
-
-    @Setter
     @Id
     @Column(nullable = false,
             unique = true)
     private String username;
 
-    @Setter
     @Column(nullable = false)
     private Long id;
 
-    @Setter
     @Column(nullable = false)
     private String password;
 
-    @Setter
     @Column(nullable = false)
     private boolean enabled = true;
+//    private boolean enabled = true;
 
-    @Setter
     @Column
     private String apikey;
 
-    @Setter
     @Column(nullable = false, unique = true)
-    private String emailAdress;
+    private String email;
 
-    @Setter
     @OneToOne
     Person person;
 
-    @Setter
     @OneToOne
     FileUploadResponse image;
 
@@ -53,18 +45,71 @@ public class User {
             cascade = CascadeType.ALL,
             orphanRemoval = true,
             fetch = FetchType.EAGER)
-    private Set<Authority> authorities = new HashSet<>();
+    private Set<Authority> roles = new HashSet<>();
 
-    public User() {
+    public String getUsername() { return username; }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public boolean IsEnabled() {
-        return false;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
-    public void addAuthority(Authority authority) {
-        this.authorities.add(authority);
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
-    public void removeAuthority(Authority authority) { this.authorities.remove(authority); }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setUsername(String username) { this.username = username; }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    public String getPassword() { return password; }
+
+    public void setPassword(String password) { this.password = password; }
+
+   public boolean IsEnabled() {return false;}
+
+    public void setEnabled(boolean enabled) { this.enabled = enabled; }
+
+    public String getApikey() { return apikey; }
+
+    public void setApikey(String apikey) { this.apikey = apikey; }
+
+    public String getEmail() { return email; }
+
+    public void setEmail(String email) { this.email = email; }
+
+    public Person getPerson() { return person; }
+
+    public void setPerson(Person person) { this.person = person; }
+
+    public Set<Authority> getRoles() { return roles; }
+
+    public void addAuthority(Authority authority) { this.roles.add(authority); }
+
+    public void removeAuthority(Authority authority) { this.roles.remove(authority); }
+
+    public Long getId() { return id; }
+
+    public void setId(Long id) { this.id = id; }
+
+    public FileUploadResponse getImage() { return image; }
+
+    public void setImage(FileUploadResponse image) { this.image = image; }
+
 }
 
 

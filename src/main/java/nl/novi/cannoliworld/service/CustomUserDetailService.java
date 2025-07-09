@@ -20,6 +20,8 @@ public class CustomUserDetailService implements UserDetailsService {
     @Autowired
     private UserService userService;
 
+
+
     @Override
     public UserDetails loadUserByUsername(String username) {
         Optional<User> user = userService.getUser(username);
@@ -29,7 +31,7 @@ public class CustomUserDetailService implements UserDetailsService {
 
         String password = user.get().getPassword();
 
-        Set<Authority> authorities = user.get().getAuthorities();
+        Set<Authority> authorities = user.get().getRoles();
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         for (Authority authority : authorities) {
             grantedAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority()));

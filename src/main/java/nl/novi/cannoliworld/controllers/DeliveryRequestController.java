@@ -52,7 +52,7 @@ public class DeliveryRequestController {
         return deliveryRequestService.createDeliveryRequest(dto);
     }
 
-    @PutMapping("/id")
+    @PutMapping("/{id}")
     public ResponseEntity<String> updateDeliveryRequest(@PathVariable Long id,
                                                         @RequestBody DeliveryRequestStatusDto deliveryRequestStatusDto) {
         deliveryRequestService.updateDeliveryRequest(deliveryRequestStatusDto);

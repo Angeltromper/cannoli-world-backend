@@ -1,3 +1,4 @@
+
 package nl.novi.cannoliworld.service;
 
 import nl.novi.cannoliworld.models.Cannoli;
@@ -22,8 +23,4 @@ public interface CannoliService {
     void deleteCannoli(Long id);
 
     void assignImageToCannoli(String fileName, Long id);
-
-
 }
-
-

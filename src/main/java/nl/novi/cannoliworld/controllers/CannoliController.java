@@ -19,18 +19,18 @@ import java.util.List;
 
 public class CannoliController {
     private final CannoliService cannoliService;
-    private final PersonController.PhotoController photoController;
+    private final PhotoController photoController;
 
     @Autowired
-    public CannoliController(CannoliService cannoliService, PersonController.PhotoController photoController) {
+    public CannoliController(CannoliService cannoliService, PhotoController photoController) {
         this.cannoliService = cannoliService;
         this.photoController = photoController;
     }
 
     @GetMapping
     @Transactional
-    public ArrayList<CannoliDto> getCannolis(@RequestParam(value = "cannoliName", required = false, defaultValue = "")String cannoliName,
-                                             @RequestParam(value = "cannoliType", required = false, defaultValue = "")String cannoliType) {
+    public List<CannoliDto> getCannolis(@RequestParam(value = "cannoliName", required = false, defaultValue = "")String cannoliName,
+                                        @RequestParam(value = "cannoliType", required = false, defaultValue = "")String cannoliType) {
 
         var dtos = new ArrayList<CannoliDto>();
         List<Cannoli> cannoliList;
@@ -87,14 +87,15 @@ public class CannoliController {
 
     @PutMapping("cannoli/{id}/image/{filename}")
     public void assignImageToCannoli(@PathVariable("id") Long cannoliId,
-                                       @PathVariable("fileName") String fileName) {
+                                     @PathVariable("filename") String fileName) {
 
         cannoliService.assignImageToCannoli(fileName, cannoliId);
     }
 
     @PutMapping("/{id}/image")
     public void uploadImageToCannoli(@PathVariable("id") Long cannoliId,
-                                       @RequestBody MultipartFile file){
+                                     @RequestBody MultipartFile file){
+
         photoController.singleFileUpload(file);
         cannoliService.assignImageToCannoli(file.getOriginalFilename(), cannoliId);
     }

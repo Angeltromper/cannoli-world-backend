@@ -78,7 +78,7 @@ public class PersonServiceImpl implements PersonService {
         }else {
 
             Person person1 = optionalPerson.get();
-            person1.setId(person.getId());
+            person1.setId(id);
             person1.setPersonFirstname(person.getPersonFirstname());
             person1.setPersonLastname(person.getPersonLastname());
             person1.setPersonStreetName(person.getPersonStreetName());

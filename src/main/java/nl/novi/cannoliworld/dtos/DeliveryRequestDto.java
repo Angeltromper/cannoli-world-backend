@@ -4,15 +4,12 @@ package nl.novi.cannoliworld.dtos;
 import java.util.Map;
 */
 
-import lombok.Getter;
-import lombok.Setter;
 import nl.novi.cannoliworld.models.DeliveryRequest;
 import nl.novi.cannoliworld.models.Status;
 
 
 
-@Setter
-@Getter
+
 public class DeliveryRequestDto {
 
     private Long id;
@@ -24,9 +21,6 @@ public class DeliveryRequestDto {
     private Status status;
     private String comment;
     private PersonDto applier;
-
-    public DeliveryRequestDto() {
-    }
 
     public static DeliveryRequestDto fromDeliveryRequest(DeliveryRequest deliveryRequest) {
 
@@ -43,9 +37,26 @@ public class DeliveryRequestDto {
         dto.setApplier(PersonDto.fromPerson(deliveryRequest.getApplier()));
 
         return dto;
-
     }
 
+    public Long getId() { return id; }
+    private void setId(Long id) { this.id = id; }
+
+    public String getCannoliList() { return cannoliList; }
+    private void setCannoliList(String cannoliList) { this.cannoliList = cannoliList; }
+
+    public Status getStatus() { return status; }
+    private void setStatus(Status status) { this.status = status; }
+
+    public String getComment() { return comment; }
+    private void setComment(String comment) { this.comment = comment; }
+
+    public PersonDto getApplier() { return applier; }
+    private void setApplier(PersonDto applier) { this.applier = applier;}
 }
+
+
+
+
 
         

@@ -16,6 +16,9 @@ public class JwtUtil {
 
     private final static String SECTRET_KEY = "flavour";
 
+    public JwtUtil() {
+    }
+
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }

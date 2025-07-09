@@ -14,7 +14,7 @@ public interface DeliveryRequestService {
 
     DeliveryRequest getDeliveryRequest(Long id);
 
-    // DeliveryRequest createDeliveryRequest(DeliveryRequest deliveryRequest);
+//     DeliveryRequest createDeliveryRequest(DeliveryRequest deliveryRequest);
 
     DeliveryRequest createDeliveryRequest(DeliveryRequestInputDto deliveryRequestInputDto);
 

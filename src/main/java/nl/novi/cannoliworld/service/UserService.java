@@ -6,9 +6,7 @@ import java.util.*;
 
 public interface UserService {
 
-    List<User> getUsers();
-
-    Collection<User> getUser();
+    Collection<User> getUsers();
 
     Optional<User> getUser(String username);
 
@@ -21,4 +19,5 @@ public interface UserService {
     void assignPersonToUser(Long id, String username);
 
     void assignImageToUser(String fileName, String username);
+
 }
