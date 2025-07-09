@@ -57,17 +57,17 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
         */
 
 
-        Map<Long, String> cannoliList2 = new HashMap<>();
+        Map<Long, String> cannoliList1 = new HashMap<>();
 
         List<Long> cannoliListLong = deliveryRequestInputDto.getCannoliList();
 
         for (Long cannoli : cannoliListLong) {
             Optional<Cannoli> optional = cannoliRepository.findById(cannoli);
 
-            if (!cannoliList2.containsKey(cannoli)) {
-                cannoliList2.put(cannoli,"1-" + "x " + optional.get().cannoliName + "-" + '_' + '€' + optional.get().getPrice());
+            if (!cannoliList1.containsKey(cannoli)) {
+                cannoliList1.put(cannoli,"1-" + "x " + optional.get().getCannoliName() + "-" + '_' + '€' + optional.get().getPrice());
             } else {
-                String[] customArr = cannoliList2.get(cannoli).split("-");
+                String[] customArr = cannoliList1.get(cannoli).split("-");
 
                 int quantity = Integer. parseInt(customArr[0]);
                 int actualQuantity = quantity + 1;
@@ -77,11 +77,11 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
 
                 BigDecimal bigDecimalWithScale = bigDecimalDouble.setScale(2, RoundingMode.HALF_UP);
 
-                cannoliList2.put(cannoli, actualQuantity + "-x" + optional.get().getCannoliName() + "-" + '_' + '€' + bigDecimalWithScale);
+                cannoliList1.put(cannoli, actualQuantity + "-x" + optional.get().getCannoliName() + "-" + '_' + '€' + bigDecimalWithScale);
             }
         }
         deliveryRequest.setStatus(deliveryRequestInputDto.getStatus().AVAILABLE);
-        deliveryRequest.setCannoliList(cannoliList2.toString());
+        deliveryRequest.setCannoliList(cannoliList1.toString());
         deliveryRequest.setComment(deliveryRequestInputDto.getComment());
         deliveryRequest.setApplier(personRepository.getReferenceById(deliveryRequestInputDto.getApplier()));
         return deliveryRequestRepository.save(deliveryRequest);

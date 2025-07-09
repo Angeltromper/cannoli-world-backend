@@ -3,6 +3,7 @@ package nl.novi.cannoliworld.models;
 import org.hibernate.annotations.TypeDef;
 import javax.persistence.*;
 
+
 @Entity
 @Table(name = "cannolis")
 public class Cannoli {
@@ -62,15 +63,6 @@ public class Cannoli {
     public void setIngredients(String ingredients) { this.ingredients = ingredients; }
 
     public void setPrice(double price) { this.price = price; }
-
 }
-
-
-
-
-
-
-
-
 
 

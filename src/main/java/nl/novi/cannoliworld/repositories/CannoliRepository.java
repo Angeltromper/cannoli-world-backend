@@ -1,3 +1,4 @@
+
 package nl.novi.cannoliworld.repositories;
 
 import nl.novi.cannoliworld.models.Cannoli;
@@ -16,5 +17,6 @@ public interface CannoliRepository extends JpaRepository<Cannoli, String> {
 
     List<Cannoli> findByCannoliTypeContainingIgnoreCase(String cannoliType);
 }
+
 
 

@@ -24,7 +24,8 @@ public class User implements UserDetails {
     private String password;
 
     @Column(nullable = false)
-    private boolean enabled = false;
+    private boolean enabled = true;
+//    private boolean enabled = true;
 
     @Column
     private String apikey;
@@ -79,9 +80,7 @@ public class User implements UserDetails {
 
     public void setPassword(String password) { this.password = password; }
 
-    public boolean IsEnabled() {
-        return false;
-    }
+   public boolean IsEnabled() {return false;}
 
     public void setEnabled(boolean enabled) { this.enabled = enabled; }
 

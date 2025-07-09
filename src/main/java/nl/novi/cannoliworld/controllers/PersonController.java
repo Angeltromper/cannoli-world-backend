@@ -31,7 +31,7 @@ public class PersonController {
 
         var dtos = new ArrayList<PersonDto>();
 
-        List<Person> personList;
+        List <Person> personList;
 
         if (personFirstname == null && personLastname == null) {
             personList = personService.getPersonList();

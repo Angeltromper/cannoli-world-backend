@@ -42,7 +42,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -78,8 +77,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/cannolis/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/cannolis/{id}**").hasRole("ADMIN")
 
- /*             .antMatchers(HttpMethod.GET, "/deliveryRequests/all").permitAll()*/
-
+//                .antMatchers(HttpMethod.GET, "/deliveryRequests/all").permitAll()
                 .antMatchers(HttpMethod.GET, "/deliveryRequests/{id}").permitAll()
                 .antMatchers(HttpMethod.POST, "/deliveryRequests/create").permitAll()
                 .antMatchers(HttpMethod.PUT, "/deliveryRequests/{id}").permitAll()
