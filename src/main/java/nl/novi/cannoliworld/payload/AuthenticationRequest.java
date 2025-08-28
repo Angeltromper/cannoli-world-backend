@@ -1,10 +1,14 @@
 package nl.novi.cannoliworld.payload;
 
+
 import lombok.Getter;
 import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Setter
 @Getter
+@NoArgsConstructor
+
 public class AuthenticationRequest {
 
     private String username;

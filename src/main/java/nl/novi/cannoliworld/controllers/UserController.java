@@ -23,6 +23,7 @@ public class UserController {
     public UserController(UserService userService, PhotoController photoController) {
         this.userService = userService;
         this.photoController = photoController;
+//        this.personService = personService;
     }
 
     @GetMapping("/all")

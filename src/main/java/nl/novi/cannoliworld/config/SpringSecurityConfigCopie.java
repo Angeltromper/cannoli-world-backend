@@ -1,4 +1,4 @@
-
+/*
 package nl.novi.cannoliworld.config;
 
 import nl.novi.cannoliworld.filter.JwtRequestFilter;
@@ -22,14 +22,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 
 
-public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+public class SpringSecurityConfigCopie extends WebSecurityConfigurerAdapter {
     @Autowired
     public CustomUserDetailService customUserDetailService;
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
 
-    public SpringSecurityConfig() {
+    public SpringSecurityConfigCopie() {
     }
 
     @Autowired
@@ -101,6 +101,29 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 }
+
+ */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

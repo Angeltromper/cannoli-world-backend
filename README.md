@@ -130,7 +130,7 @@ cannoli's die de mogelijkheid biedt om franchisenemer te worden.
 Kortom cannoli is een lekkernij die je echt geproefd moet hebben om de intense smaak te kunnen ervaren!
 
 
-###### Eindopdracht Fullstack Developer NOVI College | Angelique Tromper | Copyright © 2023-2024 Cannoli-world App | Alle Rechten Voorbehouden.
+###### Eindopdracht Fullstack Developer NOVI College | Angelique Tromper | Copyright © 2024-2025 Cannoli-world App | Alle Rechten Voorbehouden.
 
 
 

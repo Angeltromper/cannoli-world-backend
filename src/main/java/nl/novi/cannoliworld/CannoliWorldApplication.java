@@ -10,6 +10,6 @@ public class CannoliWorldApplication {
 
 
     public static void main(String[] args) {
-        SpringApplication.run(CannoliWorldApplication.class, Arrays.toString(args));
+        SpringApplication.run(CannoliWorldApplication.class, args);
     }
 }

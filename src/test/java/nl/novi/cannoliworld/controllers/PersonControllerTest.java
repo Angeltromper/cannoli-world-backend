@@ -83,14 +83,14 @@ class PersonControllerTest {
         PersonDto result = personController.getPerson(1L);
 
         assertNotNull(result);
-        assertEquals(1L, result.id);
-        assertEquals("Angelique", result.personFirstname);
-        assertEquals("Tromper", result.personLastname);
-        assertEquals("Spaandammerdijk", result.personStreetName);
-        assertEquals("1", result.personHouseNumber);
-        assertEquals("a", result.personHouseNumberAdd);
-        assertEquals("Amsterdam", result.personCity);
-        assertEquals("1014AA", result.personZipcode);
+        assertEquals(1L, result.getId());
+        assertEquals("Angelique", result.getPersonFirstname());
+        assertEquals("Tromper", result.getPersonLastname());
+        assertEquals("Spaandammerdijk", result.getPersonStreetName());
+        assertEquals("1", result.getPersonHouseNumber());
+        assertEquals("a", result.getPersonHouseNumberAdd());
+        assertEquals("Amsterdam", result.getPersonCity());
+        assertEquals("1014AA", result.getPersonZipcode());
     }
 
     @Test
