@@ -22,14 +22,14 @@ class UserTest {
     @DisplayName("Should set the enabled to true")
     void setEnableWhenEnabledIsTrue() {
         user.setEnabled(true);
-        assertTrue(user.IsEnabled());
+        assertTrue(user.isEnabled());
     }
 
     @Test
     @DisplayName("Should set the enabled to false")
     void setEnabledWhenEnabledIsFalse() {
         user.setEnabled(false);
-        assertFalse(user.IsEnabled());
+        assertFalse(user.isEnabled());
     }
 
     @Test

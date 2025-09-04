@@ -1,4 +1,3 @@
-
 package nl.novi.cannoliworld.config;
 
 import nl.novi.cannoliworld.filter.JwtRequestFilter;
@@ -15,22 +14,23 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.Arrays;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-
-
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+
     @Autowired
     public CustomUserDetailService customUserDetailService;
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
-
-    public SpringSecurityConfig() {
-    }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -45,62 +45,72 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
-
         http
-                .httpBasic().disable()
+                .cors() // <-- AAN
+                .and()
                 .csrf().disable()
                 .authorizeRequests()
+                // Sta preflight toe
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                // Users
                 .antMatchers(HttpMethod.GET, "/users/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/users/all").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/users/{id}").permitAll()
-                .antMatchers(HttpMethod.POST, "/users/").permitAll()
-                .antMatchers(HttpMethod.POST, "/users/create").permitAll()
-                .antMatchers(HttpMethod.POST, "/users/{username}").permitAll()
-                .antMatchers(HttpMethod.PUT, "/users/{username}").permitAll()
-                .antMatchers(HttpMethod.PUT, "/users/{username}/{id}").permitAll()
-                .antMatchers(HttpMethod.PUT, "/users/{username}/image").permitAll()
+                .antMatchers(HttpMethod.POST, "/users/**").permitAll()
+                .antMatchers(HttpMethod.PUT, "/users/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/users/delete/{username}").hasRole("ADMIN")
 
+                // Persons
                 .antMatchers(HttpMethod.GET, "/persons/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/persons/users").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/persons/{id}").permitAll()
                 .antMatchers(HttpMethod.POST, "/persons/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/persons").permitAll()
                 .antMatchers(HttpMethod.PUT, "/persons/{id}").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/persons/**").hasRole("ADMIN")
 
-                .antMatchers(HttpMethod.GET, "/cannolis").permitAll()
-                .antMatchers(HttpMethod.GET, "/cannolis/{id}").permitAll()
+                // Cannolis
+                .antMatchers(HttpMethod.GET, "/cannolis/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/cannolis/{id}/image").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/cannolis/{id}/image").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/cannolis/**").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/cannolis/").hasRole("ADMIN")
-                .antMatchers(HttpMethod.DELETE, "/cannolis/{id}**").hasRole("ADMIN")
 
+                // Delivery requests
                 .antMatchers(HttpMethod.GET, "/deliveryRequests/all").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/deliveryRequests/mine").authenticated()
-                .antMatchers(HttpMethod.GET, "/deliveryRequests/*").authenticated()   // detail: admin/eigenaar via @PreAuthorize
+                .antMatchers(HttpMethod.GET, "/deliveryRequests/*").authenticated() // eigenaar/admin via @PreAuthorize
                 .antMatchers(HttpMethod.POST, "/deliveryRequests/**").authenticated()
                 .antMatchers(HttpMethod.PUT, "/deliveryRequests/*").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/deliveryRequests/**").hasRole("ADMIN")
 
-//                .antMatchers(HttpMethod.GET, "/deliveryRequests/{id}").permitAll()
-//                .antMatchers(HttpMethod.POST, "/deliveryRequests/create").permitAll()
-//                .antMatchers(HttpMethod.PUT, "/deliveryRequests/{id}").permitAll()
-//                .antMatchers(HttpMethod.DELETE, "/deliveryRequests/delete/{id}").hasRole("ADMIN")
-
+                // Images
                 .antMatchers(HttpMethod.GET, "/images/upload").permitAll()
-                .antMatchers(HttpMethod.GET, "/images/download/{fileName}").permitAll()
+                .antMatchers(HttpMethod.GET, "/images/download/**").permitAll()
                 .antMatchers(HttpMethod.GET, "/images/delete").hasRole("ADMIN")
 
+                // Auth (login)
                 .antMatchers("/authenticate").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration cfg = new CorsConfiguration();
+
+        // Alle localhost-poorten toestaan (dev)
+        cfg.setAllowedOriginPatterns(List.of("http://localhost:*"));
+
+        cfg.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
+        cfg.setExposedHeaders(List.of("Authorization", "Location"));
+        cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
+        cfg.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", cfg);
+        return source;
+    }
 }
-
-
-

@@ -26,7 +26,7 @@ class DeliveryRequestTest {
 
         dr.setId(1L);
         dr.setComment("Opmerking");
-        dr.setStatus(APPROVED); // top-level enum
+        dr.setStatus(CONFIRMED); // top-level enum
         dr.setCannoliList(List.of(sampleItem()));
 
         Person applier = new Person();
@@ -36,7 +36,7 @@ class DeliveryRequestTest {
 
         assertEquals(1L, dr.getId());
         assertEquals("Opmerking", dr.getComment());
-        assertEquals(APPROVED, dr.getStatus());
+        assertEquals(CONFIRMED, dr.getStatus());
         assertNotNull(dr.getCannoliList());
         assertEquals(1, dr.getCannoliList().size());
         assertSame(applier, dr.getApplier());
@@ -52,7 +52,7 @@ class DeliveryRequestTest {
 
         DeliveryRequest b = new DeliveryRequest();
         b.setId(10L);
-        b.setStatus(REJECTED);
+        b.setStatus(AVAILABLE);
 
         DeliveryRequest c = new DeliveryRequest();
         c.setId(11L);

@@ -10,7 +10,6 @@ public interface DeliveryRequestService {
     List<DeliveryRequest> getDeliveryRequests();                 // Admin
     List<DeliveryRequest> getMyDeliveryRequests(String username); // Klant
     DeliveryRequest getDeliveryRequest(Long id);                  // Detail admin/eigenaar
-    // NIEUWE SIGNATURES — gebruik de nieuwe DTO
     DeliveryRequest createDeliveryRequest(CreateDeliveryRequestDto dto,String username);
     void updateDeliveryRequest(Long id, DeliveryRequestStatusDto statusDto);
     void deleteDeliveryRequest(Long id);

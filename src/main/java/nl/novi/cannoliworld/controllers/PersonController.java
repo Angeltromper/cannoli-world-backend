@@ -11,9 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
-@CrossOrigin
 @RestController
+@CrossOrigin
 @RequestMapping("/persons")
 public class PersonController {
 
@@ -26,56 +25,56 @@ public class PersonController {
 
     @GetMapping("/users")
     @Transactional
-    public List<PersonDto> getPersonList(@RequestParam(value = "firstname", required = false, defaultValue = "") String personFirstname,
-                                         @RequestParam(value = "lastname", required = false, defaultValue = "") String personLastname) {
+    public List<PersonDto> getPersonList(
+            @RequestParam(value = "firstname", required = false, defaultValue = "") String personFirstname,
+            @RequestParam(value = "lastname",  required = false, defaultValue = "") String personLastname
+    ) {
+        List<Person> persons;
+        boolean hasFirst = personFirstname != null && !personFirstname.isBlank();
+        boolean hasLast  = personLastname  != null && !personLastname.isBlank();
 
-        var dtos = new ArrayList<PersonDto>();
-
-        List <Person> personList;
-
-        if (personFirstname == null && personLastname == null) {
-            personList = personService.getPersonList();
-
-        } else if (personFirstname != null && personLastname == null) {
-            personList = personService.findPersonListByPersonFirstname(personFirstname);
-
+        if (!hasFirst && !hasLast) {
+            persons = personService.getPersonList();
+        } else if (hasFirst && !hasLast) {
+            persons = personService.findPersonListByPersonFirstname(personFirstname);
         } else {
-            personList = personService.findPersonListByPersonLastname(personLastname);
+            persons = personService.findPersonListByPersonLastname(personLastname);
         }
-        for (Person person : personList) {
-            dtos.add(PersonDto.fromPerson(person));
+
+        var dtos = new ArrayList<PersonDto>(persons.size());
+        for (Person p : persons) {
+            dtos.add(PersonDto.fromPerson(p));
         }
         return dtos;
     }
 
     @GetMapping("/{id}")
     public PersonDto getPerson(@PathVariable("id") Long id) {
-
         var person = personService.getPerson(id);
+        return PersonDto.fromPerson(person);
+    }
 
+    // 🔹 NIEUW: ophalen op basis van username (gekoppelde User.username)
+    @GetMapping("/by-username/{username}")
+    public PersonDto getByUsername(@PathVariable String username) {
+        var person = personService.getByUsername(username);
         return PersonDto.fromPerson(person);
     }
 
     @PostMapping
     public PersonDto savePerson(@RequestBody PersonInputDto dto) {
-
         var person = personService.savePerson(dto.toPerson());
-
         return PersonDto.fromPerson(person);
     }
 
     @PutMapping("/{id}")
-    public PersonDto updatePerson(@PathVariable Long id,
-                                  @RequestBody Person person) {
+    public PersonDto updatePerson(@PathVariable Long id, @RequestBody Person person) {
         personService.updatePerson(id, person);
-
         return PersonDto.fromPerson(person);
     }
 
-    @DeleteMapping(path = "{id}")
-    public void deletePerson(
-            @PathVariable("id") Long personId) {
+    @DeleteMapping("/{id}")
+    public void deletePerson(@PathVariable("id") Long personId) {
         personService.deletePerson(personId);
     }
 }
-

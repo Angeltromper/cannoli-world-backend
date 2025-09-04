@@ -1,4 +1,3 @@
-
 package nl.novi.cannoliworld.controllers;
 
 import nl.novi.cannoliworld.dtos.CreateDeliveryRequestDto;
@@ -16,7 +15,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@CrossOrigin // (overweeg origin + allowCredentials netjes te configureren)
 @RestController
 @RequestMapping("/deliveryRequests")
 public class DeliveryRequestController {
@@ -27,8 +25,8 @@ public class DeliveryRequestController {
         this.service = service;
     }
 
-    // ADMIN
-    @GetMapping({"", "/all"})
+    /** ADMIN: alle verzoeken */
+    @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<DeliveryRequestDto>> getAll() {
         var dtos = service.getDeliveryRequests().stream()
@@ -37,17 +35,18 @@ public class DeliveryRequestController {
         return ResponseEntity.ok(dtos);
     }
 
-    // MINE (ingelogde klant)
+    /** KLANT: eigen verzoeken (op basis van ingelogde gebruiker) */
     @GetMapping("/mine")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<DeliveryRequestDto>> mine(Authentication auth) {
-        var dtos = service.getMyDeliveryRequests(auth.getName()).stream()
+        String username = auth.getName(); // komt uit JwtRequestFilter -> UsernamePasswordAuthenticationToken
+        var dtos = service.getMyDeliveryRequests(username).stream()
                 .map(DeliveryRequestDto::fromDeliveryRequest)
                 .collect(Collectors.toList());
         return ResponseEntity.ok(dtos);
     }
 
-    // DETAIL (admin of eigenaar)
+    /** DETAIL: alleen admin of eigenaar mag details zien */
     @GetMapping("/{id:\\d+}")
     @PreAuthorize("hasRole('ADMIN') or @deliveryRequestSecurity.isOwner(#id, authentication)")
     public ResponseEntity<DeliveryRequestDto> getOne(@PathVariable Long id) {
@@ -55,25 +54,22 @@ public class DeliveryRequestController {
         return ResponseEntity.ok(DeliveryRequestDto.fromDeliveryRequest(dr));
     }
 
-    // CREATE  (gebruik hier CreateDeliveryRequestDto)
-    @PostMapping({"", "/create"})
-    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
+    /** CREATE: klant en admin mogen aanmaken */
+    @PostMapping("/create")
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<DeliveryRequestDto> create(
             @Valid @RequestBody CreateDeliveryRequestDto dto,
             Authentication auth
     ) {
-        // Als je applierId uit de token wil halen i.p.v. uit body:
-        // Long applierId = userService.findIdByUsername(auth.getName());
-        // DeliveryRequest created = service.createDeliveryRequest(dto, applierId);
-
-        var created = service.createDeliveryRequest(dto, auth.getName());
+        String username = auth.getName(); // eigenaar vastleggen op basis van ingelogde user
+        DeliveryRequest created = service.createDeliveryRequest(dto, username);
 
         return ResponseEntity
-        .created(URI.create("/deliveryRequests/" + created.getId()))
+                .created(URI.create("/deliveryRequests/" + created.getId()))
                 .body(DeliveryRequestDto.fromDeliveryRequest(created));
     }
 
-    // UPDATE STATUS (ADMIN)
+    /** ADMIN: status/bewerking aanpassen */
     @PutMapping("/{id:\\d+}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> updateStatus(
@@ -84,8 +80,8 @@ public class DeliveryRequestController {
         return ResponseEntity.ok().build();
     }
 
-    // DELETE (ADMIN)
-    @DeleteMapping({"/{id:\\d+}", "/delete/{id:\\d+}"})
+    /** ADMIN: verwijderen */
+    @DeleteMapping("/{id:\\d+}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         service.deleteDeliveryRequest(id);

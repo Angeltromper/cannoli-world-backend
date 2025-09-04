@@ -155,7 +155,7 @@ class DeliveryRequestControllerTest {
     @WithMockUser(roles = "ADMIN")
     void updateStatus_admin_ok() throws Exception {
         DeliveryRequestStatusDto body = new DeliveryRequestStatusDto();
-        body.setStatus(DeliveryRequestStatus.APPROVED);
+        body.setStatus(DeliveryRequestStatus.CONFIRMED);
 
         mockMvc.perform(put("/deliveryRequests/7")
                         .contentType(MediaType.APPLICATION_JSON)

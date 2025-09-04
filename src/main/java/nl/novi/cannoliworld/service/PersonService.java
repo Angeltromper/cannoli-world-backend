@@ -13,8 +13,8 @@ public interface PersonService {
 
     Person getPerson(Long id);
     Person savePerson(Person person);
-
+    Person getByUsername(String username);
     void updatePerson(Long id, Person person);
-
     void deletePerson(Long personId);
+
 }

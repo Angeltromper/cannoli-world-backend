@@ -7,6 +7,8 @@ INSERT INTO image (file_name, content_type, url) VALUES ('cocos_snack.jpg', 'ima
 INSERT INTO image (file_name, content_type, url) VALUES ('creme_catalana_snack.jpg', 'image/jpg', 'http://localhost:8080/images/download/creme_catalana_snack.jpg');
 INSERT INTO image (file_name, content_type, url) VALUES ('aardbei_snack.jpg', 'image/jpg', 'http://localhost:8080/images/download/aardbei_snack.jpg');
 
+
+
 INSERT INTO image (file_name, content_type, url) VALUES ('wittechocola_glutenfree.jpg', 'image/jpg', 'http://localhost:8080/images/download/wittechocola_glutenfree.jpg');
 INSERT INTO image (file_name, content_type, url) VALUES ('bosvruchten_glutenfree.jpg', 'image/jpg', 'http://localhost:8080/images/download/bosvruchten_glutenfree.jpg');
 INSERT INTO image (file_name, content_type, url) VALUES ('hazelnoot_glutenfree.jpg', 'image/jpg', 'http://localhost:8080/images/download/hazelnoot_glutenfree.jpg');
