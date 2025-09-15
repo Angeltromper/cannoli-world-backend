@@ -33,5 +33,4 @@ public class ExceptionController {
 
         return new ResponseEntity<>(exception.getMessage(), HttpStatus.NOT_FOUND);
     }
-
 }

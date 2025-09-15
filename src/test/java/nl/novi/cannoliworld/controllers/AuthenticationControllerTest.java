@@ -28,25 +28,19 @@ class AuthenticationControllerTest {
     private AuthenticationController authenticationController;
 
     @Test
-    @DisplayName("Should throw an exception when the username or password are incorrect")
-    void createAuthenticationTokenWhenUsernameOrPasswordAreIncorrectThenThrowException() {
-        AuthenticationRequest authenticationRequest =
-                new AuthenticationRequest("username", "password");
+    @DisplayName("POST /authenticate — BadCredentialsException bij fout inlog")
+    void createAuthenticationToken_badCredentials_throws() {
+        var req = new AuthenticationRequest("username", "password");
+
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class)))
                 .thenThrow(new BadCredentialsException("Incorrect username or password"));
 
-        Exception exception =
-                assertThrows(
-                        Exception.class,
-                        () -> {
-                            authenticationController.createAuthenticationToken(
-                                    authenticationRequest);
-                        });
-        assertEquals("Incorrect username or password", exception.getMessage());
+        var ex = assertThrows(
+                BadCredentialsException.class,
+                () -> authenticationController.createAuthenticationToken(req)
+        );
 
+        assertEquals("Incorrect username or password", ex.getMessage());
+        verify(authenticationManager).authenticate(any(UsernamePasswordAuthenticationToken.class));
     }
 }
-
-
-
-

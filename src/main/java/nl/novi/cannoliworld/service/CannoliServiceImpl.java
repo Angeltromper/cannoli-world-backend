@@ -81,7 +81,7 @@ public class CannoliServiceImpl implements CannoliService {
     }
 
     @Override
-    public void updateCannoli(Cannoli cannoli) {
+    public Cannoli updateCannoli(Cannoli cannoli) {
 
         Optional<Cannoli> optionalCannoli = cannoliRepository.findById(cannoli.getId());
 
@@ -98,9 +98,8 @@ public class CannoliServiceImpl implements CannoliService {
             cannoli1.setPrice(cannoli.getPrice());
 
             cannoliRepository.save(cannoli1);
-
-
         }
+        return cannoli;
     }
 
     @Override
@@ -128,8 +127,6 @@ public class CannoliServiceImpl implements CannoliService {
             throw new RecordNotFoundException();
         }
     }
-
-
 }
 
 

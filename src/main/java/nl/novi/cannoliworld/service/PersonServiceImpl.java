@@ -5,6 +5,8 @@ import nl.novi.cannoliworld.models.Person;
 import nl.novi.cannoliworld.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -44,6 +46,12 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public Person getPerson(Long id) {
+        return personRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("persoon niet gevonden..."));
+    }
+
+   /*
+    public Person getPerson(Long id) {
         Optional<Person> person = personRepository.findById(id);
         if (person.isPresent()) {
             return person.get();
@@ -51,13 +59,31 @@ public class PersonServiceImpl implements PersonService {
             throw new RecordNotFoundException("persoon niet gevonden..");
         }
     }
-
+*/
     @Override
     public Person savePerson(Person person) {
         return personRepository.save(person);
     }
 
     @Override
+    @Transactional
+    public Person updatePerson(Long id, Person changes) {
+        Person entity = personRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("persoon bestaat niet..."));
+
+        entity.setPersonFirstname(changes.getPersonFirstname());
+        entity.setPersonLastname(changes.getPersonLastname());
+        entity.setPersonStreetName(changes.getPersonStreetName());
+        entity.setPersonHouseNumber(changes.getPersonHouseNumber());
+        entity.setPersonHouseNumberAdd(changes.getPersonHouseNumberAdd());
+        entity.setPersonCity(changes.getPersonCity());
+        entity.setPersonZipcode(changes.getPersonZipcode());
+
+        return personRepository.save(entity);
+    }
+
+
+    /*
     public void updatePerson(Long id, Person person) {
         Optional<Person> optionalPerson = personRepository.findById(id);
 
@@ -76,7 +102,7 @@ public class PersonServiceImpl implements PersonService {
             personRepository.save(person1);
         }
     }
-
+*/
     @Override
     public void deletePerson(Long id) {
         boolean exists = personRepository.existsById(id);

@@ -15,8 +15,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomUserDetailServiceTest {
@@ -28,31 +27,37 @@ class CustomUserDetailServiceTest {
     private CustomUserDetailService customUserDetailService;
 
     @Test
-    @DisplayName("Should throw UsernameNotFoundException when user is not found")
-    void loadUserByUsernameWhenUserIsNotFoundThenThrowUsernameNotFoundException() {
-        when(userService.getUser(anyString())).thenReturn(Optional.empty());
+    @DisplayName("loadUserByUsername — user niet gevonden → UsernameNotFoundException")
+    void loadUserByUsername_userNotFound_throws() {
+        when(userService.getUser("unknown")).thenReturn(Optional.empty());
 
-        assertThrows(
-                UsernameNotFoundException.class,
-                () -> customUserDetailService.loadUserByUsername("username"));
+        assertThrows(UsernameNotFoundException.class,
+                () -> customUserDetailService.loadUserByUsername("unknown"));
+
+        verify(userService).getUser("unknown");
+        verifyNoMoreInteractions(userService);
     }
 
     @Test
-    @DisplayName("Should return UserDetails when user is found")
-    void loadUserByUsernameWhenUserIsFoundThenReturnUserDetails() {
+    @DisplayName("loadUserByUsername — user gevonden → UserDetails met rollen")
+    void loadUserByUsername_userFound_returnsDetails() {
         User user = new User();
         user.setUsername("test");
         user.setPassword("test");
         user.addAuthority(new Authority("test", "ROLE_USER"));
+        user.addAuthority(new Authority("test", "ROLE_ADMIN"));
 
-        when(userService.getUser(anyString())).thenReturn(Optional.of(user));
+        when(userService.getUser("test")).thenReturn(Optional.of(user));
 
-        UserDetails userDetails = customUserDetailService.loadUserByUsername("test");
+        UserDetails details = customUserDetailService.loadUserByUsername("test");
 
-        assertEquals( "test", userDetails.getUsername());
-        assertEquals( "test", userDetails.getPassword());
-        assertTrue(userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
+        assertEquals("test", details.getUsername());
+        assertEquals("test", details.getPassword());
+        assertEquals(2, details.getAuthorities().size());
+        assertTrue(details.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
+        assertTrue(details.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
+
+        verify(userService).getUser("test");
+        verifyNoMoreInteractions(userService);
     }
 }
-
-

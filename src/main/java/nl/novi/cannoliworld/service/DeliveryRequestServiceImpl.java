@@ -33,9 +33,19 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
         this.cannoliRepository = cannoliRepository;
     }
 
-    /* ==========================
-       Queries
-       ========================== */
+    /** Toegestane status-overgangen */
+    private static final Map<DeliveryRequestStatus, Set<DeliveryRequestStatus>> ALLOWED = Map.of(
+            DeliveryRequestStatus.NEW,       Set.of(DeliveryRequestStatus.AVAILABLE),
+            DeliveryRequestStatus.AVAILABLE, Set.of(DeliveryRequestStatus.CONFIRMED),
+            DeliveryRequestStatus.CONFIRMED, Set.of(DeliveryRequestStatus.FINISHED),
+            DeliveryRequestStatus.FINISHED,  Set.of()
+    );
+
+    private static boolean isAllowed(DeliveryRequestStatus from, DeliveryRequestStatus to) {
+        return ALLOWED.getOrDefault(from, Set.of()).contains(to);
+    }
+
+
 
     @Override
     @Transactional(readOnly = true)
@@ -84,7 +94,7 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
 
         // applier ophalen
         Person applier = personRepository.findByUserUsername(username)
-                .orElseThrow(() -> new RecordNotFoundException("Persoon niet gevonden voor user" + username));
+                .orElseThrow(() -> new RecordNotFoundException("Persoon niet gevonden voor user " + username));
 
         // catalogusproducten laden
         Set<Long> ids = qtyById.keySet();
@@ -114,23 +124,12 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
         DeliveryRequest entity = new DeliveryRequest();
         entity.setApplier(applier);
         entity.setComment(dto.getComment());
-        entity.setStatus(DeliveryRequestStatus.NEW);   // <<-- top-level enum
+        entity.setStatus(DeliveryRequestStatus.NEW);
         entity.setCannoliList(items);
 
         // opslaan
         return deliveryRequestRepository.save(entity);
     }
-
-//    @Override
-//    public DeliveryRequest createDeliveryRequestForUser(CreateDeliveryRequestDto dto, String username) {
-//        Person person = personRepository.findByUserUsername(username)
-//                .orElseThrow(() -> new RecordNotFoundException("Persoon niet gevonden voor user " + username));
-//
-//         DTO is een class (mutable) → applierId zetten
-//        dto.setApplierId(person.getId());
-
-//        return createDeliveryRequest(dto);
-//    }
 
     @Override
     public void updateDeliveryRequest(Long id, DeliveryRequestStatusDto statusDto) {
@@ -141,35 +140,32 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
             throw new IllegalArgumentException("Status mag niet leeg zijn");
         }
 
-        // (optioneel) status-transitie valideren met allowedTransition(entity.getStatus(), statusDto.getStatus())
-        entity.setStatus(statusDto.getStatus());  // <<-- top-level enum op entity
+        DeliveryRequestStatus current = entity.getStatus();
+        DeliveryRequestStatus next    = statusDto.getStatus();
+
+        if (current == next) {
+            // niets te doen
+            return;
+        }
+
+        // Valideer status-overgang
+        if (!isAllowed(current, next)) {
+            throw new IllegalStateException("Ongeldige status-overgang: " + current + " -> " + next);
+        }
+
+        entity.setStatus(next);
         deliveryRequestRepository.save(entity);
     }
 
     @Override
     public void deleteDeliveryRequest(Long id) {
-        if (!deliveryRequestRepository.existsById(id)) {
-            throw new RecordNotFoundException("DeliveryRequest niet gevonden: id=" + id);
-        }
-        deliveryRequestRepository.deleteById(id);
-//    }
+        DeliveryRequest entity = deliveryRequestRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("DeliveryRequest niet gevonden: id=" + id));
 
-    // (optioneel) transitieregels
-//    @SuppressWarnings("unused")
-//    private boolean allowedTransition(DeliveryRequestStatus from, DeliveryRequestStatus to) {
-//        if (from == to) return true;
-//        switch (from) {
-//            case NEW:
-//                return EnumSet.of(DeliveryRequestStatus.PENDING, DeliveryRequestStatus.APPROVED,
-//                        DeliveryRequestStatus.REJECTED, DeliveryRequestStatus.CANCELLED).contains(to);
-//            case APPROVED:
-//                return EnumSet.of(DeliveryRequestStatus.PROCESSING, DeliveryRequestStatus.CANCELLED).contains(to);
-//            case PROCESSING:
-//                return EnumSet.of(DeliveryRequestStatus.SHIPPED, DeliveryRequestStatus.CANCELLED).contains(to);
-//            case SHIPPED:
-//                return EnumSet.of(DeliveryRequestStatus.DELIVERED).contains(to);
-//            default:
-//                return false;
-//        }
+        if (entity.getStatus() != DeliveryRequestStatus.FINISHED) {
+            throw new IllegalStateException("Alleen FINISHED bestellingen mogen worden verwijderd.");
+        }
+
+        deliveryRequestRepository.delete(entity);
     }
 }

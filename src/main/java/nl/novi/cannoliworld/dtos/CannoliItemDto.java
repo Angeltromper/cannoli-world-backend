@@ -8,9 +8,9 @@ import java.math.BigDecimal;
 public class CannoliItemDto {
     private Long cannoliId;
     private String name;
-    private String type;         // optioneel
-    private String description;  // optioneel
-    private String ingredients;  // optioneel
+    private String type;
+    private String description;
+    private String ingredients;
     private BigDecimal unitPrice;
     private int quantity;
     private BigDecimal lineTotal;

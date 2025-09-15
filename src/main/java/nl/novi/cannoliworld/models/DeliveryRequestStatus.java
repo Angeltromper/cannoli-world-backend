@@ -6,10 +6,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 import java.util.Locale;
 
 public enum DeliveryRequestStatus {
-    NEW,
-    AVAILABLE,
-    CONFIRMED,
-    FINISHED;
+    NEW, AVAILABLE, CONFIRMED, FINISHED, CANCELLED;
 
     @JsonCreator
     public static DeliveryRequestStatus fromJson(String value) {

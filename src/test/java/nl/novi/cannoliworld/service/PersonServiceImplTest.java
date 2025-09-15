@@ -27,16 +27,18 @@ class PersonServiceImplTest {
     @InjectMocks
     private PersonServiceImpl personService;
 
-    PersonServiceImplTest() {
+    private static Person person(Long id, String first, String last) {
+        Person p = new Person();
+        p.setId(id);
+        p.setPersonFirstname(first);
+        p.setPersonLastname(last);
+        return p;
     }
 
     @Test
-    @DisplayName("Should save the person when the person is not taken")
+    @DisplayName("savePerson - slaat op wanneer de persoon geldig is")
     void savePersonWhenPersonIsNotTaken() {
-
-        Person person = new Person();
-        person.setPersonFirstname("test");
-        person.setPersonLastname("test");
+        Person person = person(null, "test", "test");
         person.setPersonStreetName("test");
         person.setPersonHouseNumber("test");
         person.setPersonHouseNumberAdd("test");
@@ -48,86 +50,80 @@ class PersonServiceImplTest {
         Person savedPerson = personService.savePerson(person);
 
         assertEquals(person, savedPerson);
+        verify(personRepository).save(person);
+        verifyNoMoreInteractions(personRepository);
     }
 
     @Test
-    @DisplayName("Should update the person when the person exists")
+    @DisplayName("updatePerson - werkt wanneer persoon bestaat")
     void updatePersonWhenPersonExists() {
-        Person person1 = new Person();
-        person1.setId(1L);
-        person1.setPersonFirstname("test");
-        person1.setPersonLastname("test");
+        Person person1 = person(1L, "test", "test");
         person1.setPersonStreetName("test");
         person1.setPersonHouseNumber("test");
         person1.setPersonHouseNumberAdd("test");
         person1.setPersonCity("test");
         person1.setPersonZipcode("test");
+
         when(personRepository.findById(1L)).thenReturn(java.util.Optional.of(person1));
+        when(personRepository.save(person1)).thenReturn(person1);
 
         person1.setPersonFirstname("Angel");
         personService.updatePerson(1L, person1);
 
+        verify(personRepository).findById(1L);
         verify(personRepository).save(person1);
+        verifyNoMoreInteractions(personRepository);
 
         assertThat(person1.getId()).isEqualTo(1);
         assertThat(person1.getPersonFirstname()).isEqualTo("Angel");
     }
 
     @Test
-    @DisplayName("Should throw an exception when the person does not exist")
+    @DisplayName("updatePerson - gooit RecordNotFoundException wanneer persoon niet bestaat")
     void updatePersonWhenPersonDoesNotExistThenThrowException() {
         Long id = 1L;
         Person person = new Person();
 
+        when(personRepository.findById(id)).thenReturn(java.util.Optional.empty());
+
         assertThrows(RecordNotFoundException.class, () -> personService.updatePerson(id, person));
 
-        verify(personRepository, times(1)).findById(id);
+        verify(personRepository).findById(id);
+        verify(personRepository, never()).save(any());
+        verifyNoMoreInteractions(personRepository);
     }
 
     @Test
-    @DisplayName("Should delete the person when the person exists")
+    @DisplayName("deletePerson - verwijdert wanneer persoon bestaat")
     void deletePersonWhenPersonExists() {
-        Person person = new Person();
-        person.setId(1L);
-        person.setPersonFirstname("test");
-        person.setPersonLastname("test");
-        person.setPersonStreetName("test");
-        person.setPersonHouseNumber("test");
-        person.setPersonHouseNumberAdd("test");
-        person.setPersonCity("test");
-        person.setPersonZipcode("test");
-
         when(personRepository.existsById(1L)).thenReturn(true);
 
         personService.deletePerson(1L);
 
-        verify(personRepository, times(1)).deleteById(1L);
+        verify(personRepository).existsById(1L);
+        verify(personRepository).deleteById(1L);
+        verifyNoMoreInteractions(personRepository);
     }
 
     @Test
-    @DisplayName("Should throw an exception when the person does not exist")
+    @DisplayName("deletePerson - gooit IllegalStateException wanneer persoon niet bestaat")
     void deletePersonWhenPersonDoesNotExistThenThrowsException() {
         Long id = 1L;
         when(personRepository.existsById(id)).thenReturn(false);
 
         assertThrows(IllegalStateException.class, () -> personService.deletePerson(id));
 
-        verify(personRepository, times(1)).existsById(id);
+        verify(personRepository).existsById(id);
+        verifyNoMoreInteractions(personRepository);
     }
 
     @Test
-    @DisplayName("Should return the list of persons when the personFirstname is found")
+    @DisplayName("findPersonListByPersonFirstname - geeft lijst terug bij matches")
     void findPersonListByPersonFirstnameWhenPersonFirstnameIsFoundThenReturnTheListOfPersons() {
-
-        Person person1 = new Person();
-        person1.setPersonFirstname("Mieke");
-        person1.setPersonLastname("Bloemendaal");
-
-        Person person2 = new Person();
-        person2.setPersonFirstname("Mieke");
-        person2.setPersonLastname("Bloemendaal");
-
-        List<Person> personList = Arrays.asList(person1, person2);
+        List<Person> personList = Arrays.asList(
+                person(1L, "Mieke", "Bloemendaal"),
+                person(2L, "Mieke", "Bloemendaal")
+        );
 
         when(personRepository.findByPersonFirstnameContainingIgnoreCase("Mieke"))
                 .thenReturn(personList);
@@ -135,12 +131,13 @@ class PersonServiceImplTest {
         List<Person> result = personService.findPersonListByPersonFirstname("Mieke");
 
         assertEquals(2, result.size());
+        verify(personRepository).findByPersonFirstnameContainingIgnoreCase("Mieke");
+        verifyNoMoreInteractions(personRepository);
     }
 
     @Test
-    @DisplayName("Should throw an exception when the personFirstname is not found")
+    @DisplayName("findPersonListByPersonFirstname - gooit RecordNotFoundException bij geen matches")
     void findPersonListByPersonFirstnameWhenPersonFirstnameIsNotFoundThenThrowException() {
-
         String personFirstname = "test";
         when(personRepository.findByPersonFirstnameContainingIgnoreCase(personFirstname))
                 .thenReturn(Arrays.asList());
@@ -149,23 +146,20 @@ class PersonServiceImplTest {
                 RecordNotFoundException.class,
                 () -> personService.findPersonListByPersonFirstname(personFirstname));
 
-        verify(personRepository, times(1))
-                .findByPersonFirstnameContainingIgnoreCase(personFirstname);
+        verify(personRepository).findByPersonFirstnameContainingIgnoreCase(personFirstname);
+        verifyNoMoreInteractions(personRepository);
     }
 
     @Test
-    @DisplayName("Should return all persons")
+    @DisplayName("getPersonList - retourneert alle personen")
     void getPersonListShouldReturnsAllPersons() {
-
-        Person person1 = new Person();
-        Person person2 = new Person();
-        List<Person> personList = Arrays.asList(person1, person2);
-
+        List<Person> personList = Arrays.asList(new Person(), new Person());
         when(personRepository.findAll()).thenReturn(personList);
 
         List<Person> result = personService.getPersonList();
 
         assertEquals(2, result.size());
-        verify(personRepository, times(1)).findAll();
+        verify(personRepository).findAll();
+        verifyNoMoreInteractions(personRepository);
     }
 }

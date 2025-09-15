@@ -18,7 +18,7 @@ public interface CannoliService {
 
     Cannoli createCannoli(Cannoli cannoli);
 
-    void updateCannoli(Cannoli cannoli);
+    Cannoli updateCannoli(Cannoli cannoli);
 
     void deleteCannoli(Long id);
 

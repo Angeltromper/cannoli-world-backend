@@ -1,27 +1,37 @@
 package nl.novi.cannoliworld.dtos;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import nl.novi.cannoliworld.models.Person;
 
-
-
 public class PersonInputDto {
-
     public Long id;
+
+    @NotBlank @Size(max = 100)
     public String personFirstname;
+
+    @NotBlank @Size(max = 100)
     public String personLastname;
+
+    @Size(max = 100)
     public String personStreetName;
+
+    @Size(max = 10)
     public String personHouseNumber;
+
+    @Size(max = 10)
     public String personHouseNumberAdd;
+
+    @Size(max = 100)
     public String personCity;
+
+    // NL-postcode (bijv. 1234 AB). Pas aan als je eigen formaat wilt.
+    @Pattern(regexp = "^[1-9][0-9]{3}\\s?[A-Za-z]{2}$", message = "Ongeldige postcode")
     public String personZipcode;
 
-    public PersonInputDto() {
-    }
-
     public Person toPerson() {
-
         var person = new Person();
-
         person.setId(id);
         person.setPersonFirstname(personFirstname);
         person.setPersonLastname(personLastname);
@@ -30,7 +40,6 @@ public class PersonInputDto {
         person.setPersonHouseNumberAdd(personHouseNumberAdd);
         person.setPersonCity(personCity);
         person.setPersonZipcode(personZipcode);
-
         return person;
     }
 }

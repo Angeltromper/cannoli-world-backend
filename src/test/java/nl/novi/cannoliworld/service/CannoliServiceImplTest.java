@@ -27,166 +27,138 @@ class CannoliServiceImplTest {
     @InjectMocks
     private CannoliServiceImpl cannoliService;
 
-    @Test
-    @DisplayName("Should return the cannoli when the cannoli is exists")
-    void getProductWhenProductExists() {
-        Cannoli cannoli = new Cannoli();
-        cannoli.setId(1L);
-        cannoli.setCannoliName("test");
-        cannoli.setCannoliType("test");
-        cannoli.setDescription("test");
-        cannoli.setIngredients("test");
-        cannoli.setPrice(1.0);
+    private static Cannoli c(long id, String name, String type, String desc, String ingr, double price) {
+        Cannoli x = new Cannoli();
+        x.setId(id);
+        x.setCannoliName(name);
+        x.setCannoliType(type);
+        x.setDescription(desc);
+        x.setIngredients(ingr);
+        x.setPrice(price);
+        return x;
+    }
 
+    @Test
+    @DisplayName("getCannoli — bestaat → entity terug")
+    void getProductWhenProductExists() {
+        var cannoli = c(1L, "test", "test", "test", "test", 1.0);
         when(cannoliRepository.findById(1L)).thenReturn(Optional.of(cannoli));
 
         Cannoli result = cannoliService.getCannoli(1L);
 
         assertEquals(cannoli, result);
+        verify(cannoliRepository).findById(1L);
+        verifyNoMoreInteractions(cannoliRepository);
     }
 
     @Test
-    @DisplayName("Should throw an exception when the cannoli does not exist")
+    @DisplayName("getCannoli — bestaat niet → RecordNotFoundException")
     void getProductWhenProductDoesNotExistThenThrowException() {
         when(cannoliRepository.findById(1L)).thenReturn(Optional.empty());
 
         assertThrows(RecordNotFoundException.class, () -> cannoliService.getCannoli(1L));
 
-        verify(cannoliRepository, times(1)).findById(1L);
+        verify(cannoliRepository).findById(1L);
+        verifyNoMoreInteractions(cannoliRepository);
     }
 
     @Test
-    @DisplayName("Should returns all cannolis")
+    @DisplayName("getCannolis — alle producten")
     void getProductsShouldReturnsAllCannolis() {
-        Cannoli cannoli = new Cannoli();
-        cannoli.setId(1L);
-        cannoli.setCannoliName("test");
-        cannoli.setCannoliType("test");
-        cannoli.setDescription("test");
-        cannoli.setIngredients("test");
-        cannoli.setPrice(1.0);
-
-        when(cannoliRepository.findAll()).thenReturn(List.of(cannoli));
+        when(cannoliRepository.findAll()).thenReturn(List.of(
+                c(1L, "a", "t", "d", "i", 1.0)
+        ));
 
         List<Cannoli> cannolis = cannoliService.getCannolis();
 
         assertNotNull(cannolis);
         assertFalse(cannolis.isEmpty());
         assertEquals(1, cannolis.size());
-
-        verify(cannoliRepository, times(1)).findAll();
+        verify(cannoliRepository).findAll();
+        verifyNoMoreInteractions(cannoliRepository);
     }
 
     @Test
-    @DisplayName("Should returns a list of cannolis when the cannoli type is found")
+    @DisplayName("findCannoliListByType — gevonden → lijst terug")
     void findCannoliListByTypeWhenCannoliTypeIsFoundThenReturnsAListOfCannolis() {
-        String cannoliType = "glutenfree";
-        Cannoli cannoli = new Cannoli();
-        cannoli.setCannoliType(cannoliType);
+        String type = "glutenfree";
+        when(cannoliRepository.findByCannoliTypeContainingIgnoreCase(type))
+                .thenReturn(List.of(c(2L, "x", type, "d", "i", 2.0)));
 
-        when(cannoliRepository.findByCannoliTypeContainingIgnoreCase(cannoliType))
-                .thenReturn(List.of(cannoli));
-
-        var result = cannoliService.findCannoliListByType(cannoliType);
+        var result = cannoliService.findCannoliListByType(type);
 
         assertNotNull(result);
         assertFalse(result.isEmpty());
         assertEquals(1, result.size());
-        assertEquals(cannoliType,result.get(0).getCannoliType());
-
+        assertEquals(type, result.get(0).getCannoliType());
+        verify(cannoliRepository).findByCannoliTypeContainingIgnoreCase(type);
+        verifyNoMoreInteractions(cannoliRepository);
     }
 
     @Test
-    @DisplayName("Should throws an exception when the cannoli type is not found")
+    @DisplayName("findCannoliListByType — niet gevonden → RecordNotFoundException")
     void findCannoliListByTypeWhenCannoliTypeIsNotFoundThenThrowsException() {
-        String cannoliType = "glutenfree";
+        String type = "glutenfree";
+        when(cannoliRepository.findByCannoliTypeContainingIgnoreCase(type)).thenReturn(List.of());
 
-        assertThrows(
-                RecordNotFoundException.class,
-                () -> cannoliService.findCannoliListByType(cannoliType));
+        assertThrows(RecordNotFoundException.class, () -> cannoliService.findCannoliListByType(type));
 
-        verify(cannoliRepository, times(1)).findByCannoliTypeContainingIgnoreCase(cannoliType);
+        verify(cannoliRepository).findByCannoliTypeContainingIgnoreCase(type);
+        verifyNoMoreInteractions(cannoliRepository);
     }
 
     @Test
-    @DisplayName("Should delete the cannoli when the cannoli exists")
+    @DisplayName("deleteCannoli — bestaat → deleteById aangeroepen")
     void deleteProductWhenProductExists() {
-        Cannoli cannoli1 = new Cannoli();
-        cannoli1.setId(1L);
-        cannoli1.setCannoliName("test");
-
-        cannoliRepository.delete(cannoli1);
+        when(cannoliRepository.existsById(1L)).thenReturn(true);
 
         cannoliService.deleteCannoli(1L);
 
-        verify(cannoliRepository).delete(cannoli1);
-
+        verify(cannoliRepository).existsById(1L);
+        verify(cannoliRepository).deleteById(1L);
+        verifyNoMoreInteractions(cannoliRepository);
     }
 
     @Test
-    @DisplayName("Should update the cannoli when the cannoli exists")
+    @DisplayName("updateCannoli — bestaat → save aangeroepen met wijzigingen")
     void updateProductWhenProductExists() {
-        Cannoli cannoli1 = new Cannoli();
-        cannoli1.setId(1L);
-        cannoli1.setCannoliName("test");
-        cannoli1.setCannoliType("test");
-        cannoli1.setDescription("test");
-        cannoli1.setIngredients("test");
-        cannoli1.setPrice(1);
-        when(cannoliRepository.findById(1L)).thenReturn(Optional.of(cannoli1));
+        var existing = c(1L, "test", "test", "test", "test", 1.0);
+        when(cannoliRepository.findById(1L)).thenReturn(Optional.of(existing));
+        when(cannoliRepository.save(any(Cannoli.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        cannoli1.setCannoliName("");
-        cannoliService.updateCannoli(cannoli1);
+        existing.setCannoliName("nieuw");
+        Cannoli updated = cannoliService.updateCannoli(existing);
 
-        verify(cannoliRepository).save(cannoli1);
-
-        assertThat(cannoli1.getId()).isEqualTo(1);
-        assertThat(cannoli1.getCannoliName()).isEqualTo("");
-
+        assertThat(updated.getId()).isEqualTo(1L);
+        assertThat(updated.getCannoliName()).isEqualTo("nieuw");
+        verify(cannoliRepository).findById(1L);
+        verify(cannoliRepository).save(existing);
+        verifyNoMoreInteractions(cannoliRepository);
     }
 
     @Test
-    @DisplayName("Should throw an exception when the cannoli does not exist")
+    @DisplayName("updateCannoli — bestaat niet → RecordNotFoundException")
     void updateCannoliWhenCannoliDoesNotExistThenThrowException() {
-        Cannoli cannoli = new Cannoli();
-        cannoli.setId(1L);
-        cannoli.setCannoliName("test");
-        cannoli.setCannoliType("test");
-        cannoli.setDescription("test");
-        cannoli.setIngredients("test");
+        var cannoli = c(1L, "test", "test", "test", "test", 1.0);
+        when(cannoliRepository.findById(1L)).thenReturn(Optional.empty());
 
-        when(cannoliRepository.findById(1L)).thenReturn(null);
+        assertThrows(RecordNotFoundException.class, () -> cannoliService.updateCannoli(cannoli));
 
-        // Act & Assert
-        assertThrows(
-                NullPointerException.class,
-                () -> {
-                    cannoliService.updateCannoli(cannoli);
-                });
+        verify(cannoliRepository).findById(1L);
+        verify(cannoliRepository, never()).save(any());
+        verifyNoMoreInteractions(cannoliRepository);
     }
 
     @Test
-    @DisplayName("Should create a cannoli when the cannoli is valid")
+    @DisplayName("createCannoli — geldig → save en entity terug")
     void createProductWhenProductIsValid() {
-        Cannoli cannoli = new Cannoli();
-        cannoli.setId(1L);
-        cannoli.setCannoliName("test");
-        cannoli.setCannoliType("test");
-        cannoli.setDescription("test");
-        cannoli.setIngredients("test");
-        cannoli.setPrice(1.0);
-
+        var cannoli = c(1L, "test", "test", "test", "test", 1.0);
         when(cannoliRepository.save(cannoli)).thenReturn(cannoli);
 
         Cannoli result = cannoliService.createCannoli(cannoli);
 
         assertEquals(cannoli, result);
+        verify(cannoliRepository).save(cannoli);
+        verifyNoMoreInteractions(cannoliRepository);
     }
 }
-
-
-
-
-
-
-

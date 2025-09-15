@@ -30,9 +30,9 @@ public class CannoliDto {
         // double → BigDecimal
         dto.price = BigDecimal.valueOf(c.getPrice());
 
-        // voorkom LazyInitializationException
+        // voorkomt LazyInitializationException
         dto.image = (c.getImage() != null)
-                ? new ImageDto(c.getImage().getUrl()) // pas dit aan naar de juiste getter in FileUploadResponse
+                ? new ImageDto(c.getImage().getUrl())
                 : null;
 
         return dto;

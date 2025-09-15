@@ -21,7 +21,7 @@ public class DeliveryRequestSecurity {
 
         return userRepository.findById(username) // of findByUsername(username)
                 .map(user -> user.getPerson())   // user -> Person
-                .filter(Objects::nonNull)        // defensief
+//                .filter(Objects::nonNull)        // defensief
                 .map(person -> deliveryRequestRepository
                         .existsByIdAndApplier_Id(id, person.getId()))
                 .orElse(false);

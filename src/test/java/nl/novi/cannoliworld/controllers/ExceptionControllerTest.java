@@ -14,29 +14,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(MockitoExtension.class)
 class ExceptionControllerTest {
 
-    @InjectMocks
-    private ExceptionController exceptionController;
+    private final ExceptionController exceptionController = new ExceptionController();
 
     @Test
-    @DisplayName(
-            "Should return a response entity with the message and status code when the exception is RecordNotFoundException")
-    void exceptionWhenRecordNotFoundExceptionThenReturnResponseEntityWithMessageAndStatusCode() {
-
+    @DisplayName("RecordNotFoundException -> 404 met message")
+    void exception_returnsNotFoundWithMessage() {
         String message = "Record not found";
-        RecordNotFoundException recordNotFoundException = new RecordNotFoundException(message);
+        var ex = new RecordNotFoundException(message);
 
-        ResponseEntity<Object> responseEntity =
-                exceptionController.exception(recordNotFoundException);
+        ResponseEntity<Object> response = exceptionController.exception(ex);
 
-
-
-        assertEquals(message, responseEntity.getBody());
-        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        assertEquals(message, (String) response.getBody());
     }
-
 }
-
-
 
 
 
