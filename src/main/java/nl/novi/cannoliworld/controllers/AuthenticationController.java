@@ -5,16 +5,16 @@ import nl.novi.cannoliworld.payload.AuthenticationResponse;
 import nl.novi.cannoliworld.service.CustomUserDetailService;
 import nl.novi.cannoliworld.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.security.Principal;
-
-@CrossOrigin
 @RestController
 public class AuthenticationController {
 
@@ -25,29 +25,24 @@ public class AuthenticationController {
     private CustomUserDetailService customerUserDetailsService;
 
     @Autowired
-    JwtUtil jwtUtil;
-    @PostMapping(value = "/authenticate")
-    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+    private JwtUtil jwtUtil;
 
-        String username = authenticationRequest.getUsername();
-        String password = authenticationRequest.getPassword();
+    @PostMapping("/authenticate")
+    public ResponseEntity<?> createToken(@RequestBody AuthenticationRequest req) {
+        String username = req.getUsername();
+        String password = req.getPassword();
 
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password)
             );
         } catch (BadCredentialsException ex) {
-            throw new Exception("Incorrect username or password", ex);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
         }
 
-        final UserDetails userDetails = customerUserDetailsService
-                .loadUserByUsername(username);
+        UserDetails userDetails = customerUserDetailsService.loadUserByUsername(username);
+        String token = jwtUtil.generateToken(userDetails);
 
-        final String jwt = jwtUtil.generateToken(userDetails);
-
-        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+        return ResponseEntity.ok(new AuthenticationResponse(token));
     }
 }
-
-
-

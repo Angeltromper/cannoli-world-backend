@@ -13,12 +13,12 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -33,8 +33,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtRequestFilter jwtRequestFilter;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(customUserDetailService);
+        auth.userDetailsService(customUserDetailService)
+        .passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -54,25 +58,25 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 // Users
-                .antMatchers(HttpMethod.GET, "/users/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/users", "/users/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/users/all").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/users/{id}").permitAll()
+                .antMatchers(HttpMethod.GET, "/users/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/users/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/users/**").permitAll()
-                .antMatchers(HttpMethod.DELETE, "/users/delete/{username}").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/users/delete/*").hasRole("ADMIN")
 
                 // Persons
-                .antMatchers(HttpMethod.GET, "/persons/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/persons", "/persons/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/persons/users").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/persons/{id}").permitAll()
+                .antMatchers(HttpMethod.GET, "/persons/*").permitAll()
                 .antMatchers(HttpMethod.POST, "/persons/**").permitAll()
-                .antMatchers(HttpMethod.PUT, "/persons/{id}").permitAll()
+                .antMatchers(HttpMethod.PUT, "/persons/*").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/persons/**").hasRole("ADMIN")
 
                 // Cannolis
                 .antMatchers(HttpMethod.GET, "/cannolis/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/cannolis/{id}/image").hasRole("ADMIN")
-                .antMatchers(HttpMethod.PUT, "/cannolis/{id}/image").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/cannolis/*/image").hasRole("ADMIN")
+                .antMatchers(HttpMethod.PUT, "/cannolis/*/image").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/cannolis/**").hasRole("ADMIN")
 
                 // Delivery requests
@@ -89,7 +93,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/images/delete").hasRole("ADMIN")
 
                 // Auth (login)
-                .antMatchers("/authenticate").permitAll()
+                .antMatchers(HttpMethod.POST,"/authenticate").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
