@@ -10,11 +10,16 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -83,19 +88,30 @@ class PersonControllerTest {
     }
 
     @Test
-    @DisplayName("POST persons — input DTO → save → PersonDto")
+    @DisplayName("POST persons — input DTO → save → ResponseEntity<PersonDto> met Location")
     void savePerson_returnsDto() {
+        MockHttpServletRequest req = new MockHttpServletRequest("POST", "/persons");
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(req));
+
         var in = input("Test", "User");
         when(personService.savePerson(any(Person.class)))
                 .thenReturn(person(10L, "Test", "User"));
 
-        PersonDto dto = personController.savePerson(in).getBody();
+        ResponseEntity<PersonDto> resp = personController.savePerson(in);
+        PersonDto dto = resp.getBody();
 
+        assertThat(resp.getStatusCodeValue()).isEqualTo(201);
+        assertThat(resp.getHeaders().getLocation()).isNotNull();
+        assertThat(resp.getHeaders().getLocation().toString()).endsWith("/persons/10");
+        assertThat(dto).isNotNull();
         assertThat(dto.getId()).isEqualTo(10L);
         assertThat(dto.getPersonFirstname()).isEqualTo("Test");
 
         verify(personService).savePerson(any(Person.class));
         verifyNoMoreInteractions(personService);
+
+        RequestContextHolder.resetRequestAttributes();
+
     }
 
     @Test

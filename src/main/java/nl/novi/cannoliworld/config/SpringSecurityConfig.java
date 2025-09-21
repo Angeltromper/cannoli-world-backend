@@ -106,7 +106,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         CorsConfiguration cfg = new CorsConfiguration();
 
         // Alle localhost-poorten toestaan (dev)
-        cfg.setAllowedOriginPatterns(List.of("http://localhost:*"));
+        cfg.setAllowedOriginPatterns(List.of(
+                "http://127.0.0.1:*",
+                "http://localhost:*"));
 
         cfg.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
         cfg.setExposedHeaders(List.of("Authorization", "Location"));

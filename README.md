@@ -4,7 +4,7 @@
 Dit is het Backend gedeelte van mijn eindopdracht voor de Bootcamp Fullstack Development. 
 
 [Mijn Github voor de BACK-END vind je hier](https://github.com/AngelTromper/cannoli-world-backend)
-[Mijn Github voor de FRONT-END vind je hier](https://github.com/AngelTromper/cannoli-world-frontend)
+[Mijn Github voor de FRONT-END vind je hier](https://github.com/AngelTromper/cannoli-world-frontend-new)
 
 # Installatie-handleiding 
 

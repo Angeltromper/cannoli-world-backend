@@ -45,8 +45,6 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
         return ALLOWED.getOrDefault(from, Set.of()).contains(to);
     }
 
-
-
     @Override
     @Transactional(readOnly = true)
     public List<DeliveryRequest> getDeliveryRequests() {
@@ -67,10 +65,6 @@ public class DeliveryRequestServiceImpl implements DeliveryRequestService {
                 .orElseThrow(() -> new RecordNotFoundException("Persoon niet gevonden voor gebruiker " + username));
         return deliveryRequestRepository.findByApplier_Id(person.getId());
     }
-
-    /* ==========================
-       Commands
-       ========================== */
 
     @Override
     public DeliveryRequest createDeliveryRequest(CreateDeliveryRequestDto dto, String username) {

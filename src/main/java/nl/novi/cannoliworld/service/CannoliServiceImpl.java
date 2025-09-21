@@ -4,26 +4,18 @@ import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
 import nl.novi.cannoliworld.models.Cannoli;
 import nl.novi.cannoliworld.repositories.CannoliRepository;
 import nl.novi.cannoliworld.repositories.FileUploadRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
-
 
 @Transactional
 @Service
 public class CannoliServiceImpl implements CannoliService {
 
     private final CannoliRepository cannoliRepository;
-
-    private PhotoService photoService;
-
     private final FileUploadRepository fileUploadRepository;
 
-
-    @Autowired
     public CannoliServiceImpl(CannoliRepository cannoliRepository,
                               FileUploadRepository fileUploadRepository) {
         this.cannoliRepository = cannoliRepository;
@@ -31,104 +23,70 @@ public class CannoliServiceImpl implements CannoliService {
     }
 
     @Override
-    public List<Cannoli> getCannolis() { return cannoliRepository.findAll(); }
-
+    public List<Cannoli> getCannolis() {
+        return cannoliRepository.findAll();
+    }
 
     @Override
     public Cannoli getCannoli(Long id) {
-        Optional<Cannoli> cannoli = cannoliRepository.findById(id);
-
-        if (cannoli.isPresent()) {
-            return cannoli.get();
-        } else {
-            throw new RecordNotFoundException("Cannoli niet gevonden");
-        }
+        return cannoliRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("Cannoli niet gevonden"));
     }
 
     @Override
     public List<Cannoli> findCannoliListByName(String cannoliName) {
-        var optionalCannoliList = cannoliRepository.findByCannoliNameContainingIgnoreCase(cannoliName);
-
-        if (optionalCannoliList.isEmpty()) {
-            throw new RecordNotFoundException("geen cannoli gevonden met de naam" + cannoliName);
+        List<Cannoli> list = cannoliRepository.findByCannoliNameContainingIgnoreCase(cannoliName);
+        if (list.isEmpty()) {
+            throw new RecordNotFoundException("geen cannoli gevonden met de naam " + cannoliName);
         }
-
-        return optionalCannoliList;
+        return list;
     }
 
     @Override
     public List<Cannoli> findCannoliListByType(String cannoliType) {
-        var optionalCannoliList = cannoliRepository.findByCannoliTypeContainingIgnoreCase(cannoliType);
-
-        if (optionalCannoliList.isEmpty()) {
+        List<Cannoli> list = cannoliRepository.findByCannoliTypeContainingIgnoreCase(cannoliType);
+        if (list.isEmpty()) {
             throw new RecordNotFoundException("geen cannoli's gevonden");
         }
-
-        return optionalCannoliList;
+        return list;
     }
 
     @Override
     public Cannoli createCannoli(Cannoli cannoli) {
-
-        cannoli.setId(cannoli.getId());
-        cannoli.setCannoliName(cannoli.getCannoliName());
-        cannoli.setCannoliType(cannoli.getCannoliType());
-        cannoli.setDescription(cannoli.getDescription());
-        cannoli.setIngredients(cannoli.getIngredients());
-        cannoli.setPrice(cannoli.getPrice());
-
         return cannoliRepository.save(cannoli);
     }
 
     @Override
     public Cannoli updateCannoli(Cannoli cannoli) {
+        Cannoli existing = cannoliRepository.findById(cannoli.getId())
+                .orElseThrow(() -> new RecordNotFoundException("cannoli niet gevonden.."));
 
-        Optional<Cannoli> optionalCannoli = cannoliRepository.findById(cannoli.getId());
+        existing.setCannoliName(cannoli.getCannoliName());
+        existing.setCannoliType(cannoli.getCannoliType());
+        existing.setDescription(cannoli.getDescription());
+        existing.setIngredients(cannoli.getIngredients());
+        existing.setPrice(cannoli.getPrice());
 
-        if (optionalCannoli.isEmpty()) {
-            throw new RecordNotFoundException("cannoli niet gevonden..");
-        } else {
-
-            Cannoli cannoli1 = optionalCannoli.get();
-            cannoli1.setId(cannoli.getId());
-            cannoli1.setCannoliName(cannoli.getCannoliName());
-            cannoli1.setCannoliType(cannoli.getCannoliType());
-            cannoli1.setDescription(cannoli.getDescription());
-            cannoli1.setIngredients(cannoli.getIngredients());
-            cannoli1.setPrice(cannoli.getPrice());
-
-            cannoliRepository.save(cannoli1);
-        }
-        return cannoli;
+        return cannoliRepository.save(existing);
     }
 
     @Override
     public void deleteCannoli(Long id) {
+        if (!cannoliRepository.existsById(id)) {
+            throw new RecordNotFoundException("Cannoli %d not found".formatted(id));
+        }
         cannoliRepository.deleteById(id);
     }
 
-
     @Override
     public void assignImageToCannoli(String fileName, Long id) {
+        var cannoli = cannoliRepository.findById(id)
+                .orElseThrow(RecordNotFoundException::new);
 
-        var optionalCannoli = cannoliRepository.findById(id);
-        var optionalImage = fileUploadRepository.findByFileName(fileName);
+        var image = fileUploadRepository.findByFileName(fileName)
+                .orElseThrow(RecordNotFoundException::new);
 
-        if (optionalCannoli.isPresent() && optionalImage.isPresent()) {
-            var cannoli = optionalCannoli.get();
-            var image = optionalImage.get();
-
-            cannoli.setImage(image);
-
-            cannoliRepository.save(cannoli);
-
-        } else {
-
-            throw new RecordNotFoundException();
-        }
+        cannoli.setImage(image);
+        cannoliRepository.save(cannoli);
     }
 }
-
-
-
-

@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 public class AuthenticationController {
 
@@ -28,7 +30,7 @@ public class AuthenticationController {
     private JwtUtil jwtUtil;
 
     @PostMapping("/authenticate")
-    public ResponseEntity<?> createToken(@RequestBody AuthenticationRequest req) {
+    public ResponseEntity<?> createToken(@Valid @RequestBody AuthenticationRequest req) {
         String username = req.getUsername();
         String password = req.getPassword();
 

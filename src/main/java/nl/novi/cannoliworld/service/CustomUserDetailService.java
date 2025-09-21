@@ -2,42 +2,42 @@ package nl.novi.cannoliworld.service;
 
 import nl.novi.cannoliworld.models.Authority;
 import nl.novi.cannoliworld.models.User;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class CustomUserDetailService implements UserDetailsService {
-    @Autowired
-    private UserService userService;
 
+    private final UserService userService;
 
+    public CustomUserDetailService(UserService userService) {
+        this.userService = userService;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        Optional<User> user = userService.getUser(username);
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException(username);
-        }
+        User user = userService.getUser(username)
+                .orElseThrow(() ->
+                        new org.springframework.security.core.userdetails.UsernameNotFoundException(
+                                "User " + username + " not found"));
 
-        String password = user.get().getPassword();
+        var authorities = user.getRoles().stream()
+                .map(Authority::getAuthority)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
 
-        Set<Authority> authorities = user.get().getRoles();
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
-        for (Authority authority : authorities) {
-            grantedAuthorities.add(new SimpleGrantedAuthority(authority.getAuthority()));
-        }
-
-        return new org.springframework.security.core.userdetails.User(username, password, grantedAuthorities);
+        return new org.springframework.security.core.userdetails.User(
+                user.getUsername(),
+                user.getPassword(),
+                true,
+                true,
+                true,
+                user.isEnabled(),
+                authorities
+        );
     }
 }
-
