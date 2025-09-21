@@ -17,7 +17,7 @@ je eigen gegevens.
 De API REST Endpoints staan uitgebreid beschreven in de Installatie handleiding.
 Deze is te vinden in Postman. 
 
-## Aplicatie starten
+## Applicatie starten
 De eerste stap is het _clonen_ van de repository. Gebruik de Github clone feature.
 
 of onderstaande info om de code manueel te clonen.
@@ -60,7 +60,7 @@ De DTO's dienen als Data Transfer Object tussen Request en Response.
 - PersonInputDto
 - UserDto
 
-### exeptions
+### exceptions
 
 - BadRequestExeption
 - RecordNotFoundException
@@ -69,7 +69,7 @@ De DTO's dienen als Data Transfer Object tussen Request en Response.
 
 ### filter
 In de filtermap staat JwtRequestFilter die samen met JwtUtils verantwoordelijk zijn voor de authenticatie door middel van een JWT token.
-- 
+
 - JwtRequestFilter
 
 ### models
@@ -111,7 +111,7 @@ De service laag communiceert met de repository.
 
 - CannoliService
 - CannoliServiceImpl
-- CustomerUserDetailsService
+- CustomUserDetailsService
 - DeliveryRequestService
 - DeliveryRequestServiceImpl
 - PersonService
@@ -128,10 +128,10 @@ De service laag communiceert met de repository.
 Dit zijn de geconfigureerde testgebruikers. Username + wachtwoord.
 
 **USER**
-1. user - password
+user - password
 
 **ADMIN**
-1.admin - password
+admin - password
  
 ## Cannoli een onvergetelijk Italiaanse delicatesse
 
