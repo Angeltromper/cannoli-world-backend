@@ -55,7 +55,7 @@ public class DeliveryRequestController {
     }
 
     /** CREATE: klant en admin mogen aanmaken */
-    @PostMapping("/create")
+    @PostMapping({"","/create"})
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<DeliveryRequestDto> create(
             @Valid @RequestBody CreateDeliveryRequestDto dto,

@@ -1,13 +1,17 @@
 package nl.novi.cannoliworld.dtos;
 
-
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 public class CreateDeliveryRequestDto {
 
 
     @NotEmpty
+    @Valid
     private List<ItemDto> items;
     private String comment;
 
@@ -22,12 +26,12 @@ public class CreateDeliveryRequestDto {
         this.comment = comment; }
 
     public static class ItemDto {
-//        @NotNull
+        @NotNull
         private Long cannoliId;
 
-//        @NotNull
-//        @Min(1)
-//        @Max(500)
+        @NotNull
+        @Min(1)
+        @Max(500)
         private Integer quantity;
 
         // getters/setters

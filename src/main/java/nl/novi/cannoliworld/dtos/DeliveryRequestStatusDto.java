@@ -11,7 +11,7 @@ public class DeliveryRequestStatusDto {
     private DeliveryRequestStatus status;
 
     @Size(max = 500)
-    private String note; // optioneel: admin-opmerking / reden
+    private String note;
 
     public DeliveryRequestStatusDto() {}
 

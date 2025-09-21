@@ -26,7 +26,6 @@ public class PersonInputDto {
     @Size(max = 100)
     public String personCity;
 
-    // NL-postcode (bijv. 1234 AB). Pas aan als je eigen formaat wilt.
     @Pattern(regexp = "^[1-9][0-9]{3}\\s?[A-Za-z]{2}$", message = "Ongeldige postcode")
     public String personZipcode;
 
