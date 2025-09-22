@@ -7,7 +7,7 @@ import javax.persistence.*;
 public class Cannoli {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "cannoli_id")
     private Long id;
 
@@ -30,7 +30,8 @@ public class Cannoli {
     @ManyToOne(optional = true, fetch = FetchType.LAZY)
     @JoinColumn(
             name = "image_file_name",
-            referencedColumnName = "file_name"
+            referencedColumnName = "file_name",
+            foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT)
     )
     private FileUploadResponse image;
     // Constructors

@@ -66,7 +66,7 @@ class CannoliControllerTest {
 
         when(cannoliService.createCannoli(any())).thenReturn(cannoli);
 
-        CannoliDto result = controller.createCannoli(cannoliInputDto);
+        CannoliDto result = controller.createCannoli(cannoliInputDto).getBody();
 
         assertEquals(cannoliInputDto.getCannoliName(), result.getCannoliName());
     }
