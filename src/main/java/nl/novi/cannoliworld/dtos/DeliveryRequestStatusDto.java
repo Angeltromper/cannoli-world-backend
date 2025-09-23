@@ -1,14 +1,36 @@
 package nl.novi.cannoliworld.dtos;
 
-import lombok.Data;
-import nl.novi.cannoliworld.models.Status;
+import nl.novi.cannoliworld.models.DeliveryRequestStatus;
 
-@Data
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 public class DeliveryRequestStatusDto {
 
-    private Long id;
+    @NotNull
+    private DeliveryRequestStatus status;
 
-    private Status status;
+    @Size(max = 500)
+    private String note;
 
+    public DeliveryRequestStatusDto() {}
+
+    public DeliveryRequestStatusDto(DeliveryRequestStatus status, String note) {
+        this.status = status;
+        this.note = note;
+    }
+
+    public DeliveryRequestStatus getStatus() {
+        return status;
+    }
+    public void setStatus(DeliveryRequestStatus status) {
+        this.status = status;
+    }
+
+    public String getNote() {
+        return note;
+    }
+    public void setNote(String note) {
+        this.note = note;
+    }
 }
-

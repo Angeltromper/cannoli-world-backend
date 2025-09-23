@@ -1,41 +1,30 @@
 package nl.novi.cannoliworld.dtos;
+import lombok.Data;
 import nl.novi.cannoliworld.models.Person;
 
+@Data
 public class PersonDto {
-
-    public Long id;
-    public String personFirstname;
-    public String personLastname;
-    public String personStreetName;
-    public String personHouseNumber;
-    public String personHouseNumberAdd;
-    public String personCity;
-    public String personZipcode;
+    private Long id;
+    private String personFirstname;
+    private String personLastname;
+    private String personStreetName;
+    private String personHouseNumber;
+    private String personHouseNumberAdd;
+    private String personZipcode;
+    private String personCity;
 
     public PersonDto() {
     }
-
-    public static PersonDto fromPerson(Person person) {
-        if (person == null) return null;
-
-        var dto = new PersonDto();
-
-        dto.id = person.getId();
-
-        dto.personFirstname = person.getPersonFirstname();
-
-        dto.personLastname = person.getPersonLastname();
-
-        dto.personStreetName = person.getPersonStreetName();
-
-        dto.personHouseNumber = person.getPersonHouseNumber();
-
-        dto.personHouseNumberAdd = person.getPersonHouseNumberAdd();
-
-        dto.personCity = person.getPersonCity();
-
-        dto.personZipcode = person.getPersonZipcode();
-
+    public static PersonDto fromPerson(Person p) {
+        PersonDto dto = new PersonDto();
+        dto.setId(p.getId());
+        dto.setPersonFirstname(p.getPersonFirstname());
+        dto.setPersonLastname(p.getPersonLastname());
+        dto.setPersonStreetName(p.getPersonStreetName());
+        dto.setPersonHouseNumber(p.getPersonHouseNumber());
+        dto.setPersonHouseNumberAdd(p.getPersonHouseNumberAdd());
+        dto.setPersonZipcode(p.getPersonZipcode());
+        dto.setPersonCity(p.getPersonCity());
         return dto;
     }
 }

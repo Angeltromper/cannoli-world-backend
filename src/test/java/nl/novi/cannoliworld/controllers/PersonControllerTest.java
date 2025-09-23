@@ -1,8 +1,8 @@
 package nl.novi.cannoliworld.controllers;
 
 import nl.novi.cannoliworld.dtos.PersonDto;
+import nl.novi.cannoliworld.dtos.PersonInputDto;
 import nl.novi.cannoliworld.models.Person;
-import nl.novi.cannoliworld.repositories.PersonRepository;
 import nl.novi.cannoliworld.service.PersonService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,115 +10,135 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.request.RequestContextHolder;
 
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PersonControllerTest {
 
-    @Mock
-    private PersonService personService;
+    @Mock private PersonService personService;
+    @InjectMocks private PersonController personController;
 
-    @Mock
-    private PersonRepository personRepository;
+    private static Person person(Long id, String first, String last) {
+        Person p = new Person();
+        p.setId(id);
+        p.setPersonFirstname(first);
+        p.setPersonLastname(last);
+        p.setPersonStreetName("Straat");
+        p.setPersonHouseNumber("1");
+        p.setPersonHouseNumberAdd("a");
+        p.setPersonCity("Amsterdam");
+        p.setPersonZipcode("1011AA");
+        return p;
+    }
 
-    @InjectMocks
-    private PersonController personController;
-
-    @Test
-    @DisplayName("Should delete the person when the id is valid")
-    void deletePersonWhenIdIsValid() {
-        Person person = new Person();
-        person.setId(1L);
-        person.setPersonFirstname("Maria");
-        person.setPersonLastname("Kopers");
-        person.setPersonStreetName("Straat");
-        person.setPersonHouseNumber("1");
-        person.setPersonHouseNumberAdd("a");
-        person.setPersonCity("Amsterdam");
-        person.setPersonZipcode("1248RL");
-
-        personService.deletePerson(1L);
-
-        verify(personService, times(1)).deletePerson(1L);
+    private static PersonInputDto input(String first, String last) {
+        PersonInputDto in = new PersonInputDto();
+        in.personFirstname = first;
+        in.personLastname  = last;
+        in.personStreetName = "Straat";
+        in.personHouseNumber = "10";
+        in.personHouseNumberAdd = "b";
+        in.personCity = "Amsterdam";
+        in.personZipcode = "1000AA";
+        return in;
     }
 
     @Test
-    @DisplayName("Should save the person when the id is valid")
-    void savePersonWhenIdIsValid() {
-        Person person = new Person();
-        person.setPersonFirstname("Test");
-        person.setPersonLastname("Test");
-        person.setPersonStreetName("Test");
-        person.setPersonHouseNumber("Test");
-        person.setPersonHouseNumberAdd("Test");
-        person.setPersonCity("Test");
-        person.setPersonZipcode("Test");
+    @DisplayName("GET persons — all (no filters)")
+    void getPersonList_returnsAll() {
+        when(personService.getPersonList()).thenReturn(List.of(
+                person(1L, "Maria", "Kopers"),
+                person(2L, "Loes", "Bloemendaal")
+        ));
 
-        personRepository.save(person);
+        List<PersonDto> result = personController.getPersonList(null, null);
 
-        assertThat(person.getPersonFirstname()).isEqualTo("Test");
+        assertThat(result).hasSize(2);
+        assertThat(result.get(0).getId()).isEqualTo(1L);
+        assertThat(result.get(0).getPersonFirstname()).isEqualTo("Maria");
+
+        verify(personService).getPersonList();
+        verifyNoMoreInteractions(personService);
+    }
+
+    @Test
+    @DisplayName("GET person/{id} — PersonDto mapping")
+    void getPerson_returnsDto() {
+        when(personService.getPerson(1L)).thenReturn(person(1L, "Angelique", "Tromper"));
+
+        PersonDto dto = personController.getPerson(1L);
+
+        assertThat(dto).isNotNull();
+        assertThat(dto.getId()).isEqualTo(1L);
+        assertThat(dto.getPersonFirstname()).isEqualTo("Angelique");
+        assertThat(dto.getPersonLastname()).isEqualTo("Tromper");
+
+        verify(personService).getPerson(1L);
+        verifyNoMoreInteractions(personService);
+    }
+
+    @Test
+    @DisplayName("POST persons — input DTO → save → ResponseEntity<PersonDto> met Location")
+    void savePerson_returnsDto() {
+        MockHttpServletRequest req = new MockHttpServletRequest("POST", "/persons");
+        RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(req));
+
+        var in = input("Test", "User");
+        when(personService.savePerson(any(Person.class)))
+                .thenReturn(person(10L, "Test", "User"));
+
+        ResponseEntity<PersonDto> resp = personController.savePerson(in);
+        PersonDto dto = resp.getBody();
+
+        assertThat(resp.getStatusCodeValue()).isEqualTo(201);
+        assertThat(resp.getHeaders().getLocation()).isNotNull();
+        assertThat(resp.getHeaders().getLocation().toString()).endsWith("/persons/10");
+        assertThat(dto).isNotNull();
+        assertThat(dto.getId()).isEqualTo(10L);
+        assertThat(dto.getPersonFirstname()).isEqualTo("Test");
+
+        verify(personService).savePerson(any(Person.class));
+        verifyNoMoreInteractions(personService);
+
+        RequestContextHolder.resetRequestAttributes();
 
     }
 
     @Test
-    @DisplayName("Should returns the person when the id is valid")
-    void getPersonWhenIdIsValid() {
-        Person person = new Person();
-        person.setId(1L);
-        person.setPersonFirstname("Angelique");
-        person.setPersonLastname("Tromper");
-        person.setPersonStreetName("Spaandammerdijk");
-        person.setPersonHouseNumber("1");
-        person.setPersonHouseNumberAdd("a");
-        person.setPersonCity("Amsterdam");
-        person.setPersonZipcode("1014AA");
+    @DisplayName("PUT person/{id} — update returns PersonDto")
+    void updatePerson_returnsDto() {
+        var in = input("Nieuw", "Naam");           // controller verwacht DTO
+        var updatedEntity = person(5L, "Nieuw", "Naam");
 
-        when(personService.getPerson( 1L)).thenReturn(person);
+        when(personService.updatePerson(eq(5L), any(Person.class)))
+                .thenReturn(updatedEntity);
 
-        PersonDto result = personController.getPerson(1L);
+        PersonDto dto = personController.updatePerson(5L, in);
 
-        assertNotNull(result);
-        assertEquals(1L, result.id);
-        assertEquals("Angelique", result.personFirstname);
-        assertEquals("Tromper", result.personLastname);
-        assertEquals("Spaandammerdijk", result.personStreetName);
-        assertEquals("1", result.personHouseNumber);
-        assertEquals("a", result.personHouseNumberAdd);
-        assertEquals("Amsterdam", result.personCity);
-        assertEquals("1014AA", result.personZipcode);
+        assertThat(dto.getId()).isEqualTo(5L);
+        assertThat(dto.getPersonFirstname()).isEqualTo("Nieuw");
+        assertThat(dto.getPersonLastname()).isEqualTo("Naam");
+
+        verify(personService).updatePerson(eq(5L), any(Person.class));
+        verifyNoMoreInteractions(personService);
     }
 
     @Test
-    @DisplayName("Should return all person when no parameters are given")
-    void getPersonListWhenNoParaMetersAreGivenThenReturnAllPersons() {
-      var person1 = new Person();
-      person1.setId(1L);
-      person1.setPersonFirstname("Maria");
-      person1.setPersonLastname("Kopers");
+    @DisplayName("DELETE person/{id} — service called")
+    void deletePerson_callsService() {
+        personController.deletePerson(7L);
 
-        var person2 = new Person();
-        person2.setId(2L);
-        person2.setPersonFirstname("Loes");
-        person2.setPersonLastname("Bloemendaal");
-
-        var person3 = new Person();
-        person3.setId(3L);
-        person3.setPersonFirstname("Frans");
-        person3.setPersonLastname("Spaans");
-
-        var persons = List.of(person1, person2, person3);
-
-        when(personService.getPersonList()).thenReturn(persons);
-
-        var result = personController.getPersonList(null,null);
-
-        assertEquals(3, result.size());
+        verify(personService).deletePerson(7L);
+        verifyNoMoreInteractions(personService);
     }
 }
-
-

@@ -1,10 +1,10 @@
 ![Cannoli-world homepage](uploads/Logo Cannoli.png "CannoliApp Logo")
 
-# Cannoli-world App | 2023 | Novi College | Eindopdracht Full Stack Developer
+# Cannoli-world App | 2025 | Novi College | Eindopdracht Full Stack Developer
 Dit is het Backend gedeelte van mijn eindopdracht voor de Bootcamp Fullstack Development. 
 
 [Mijn Github voor de BACK-END vind je hier](https://github.com/AngelTromper/cannoli-world-backend)
-[Mijn Github voor de FRONT-END vind je hier](https://github.com/AngelTromper/cannoli-world-frontend)
+[Mijn Github voor de FRONT-END vind je hier](https://github.com/AngelTromper/cannoli-world-frontend-new)
 
 # Installatie-handleiding 
 
@@ -17,7 +17,7 @@ je eigen gegevens.
 De API REST Endpoints staan uitgebreid beschreven in de Installatie handleiding.
 Deze is te vinden in Postman. 
 
-## Aplicatie starten
+## Applicatie starten
 De eerste stap is het _clonen_ van de repository. Gebruik de Github clone feature.
 
 of onderstaande info om de code manueel te clonen.
@@ -31,9 +31,10 @@ of onderstaande info om de code manueel te clonen.
 configuratie bestanden
 
 - GlobalCorsConfiguration
+- PasswordEncoderBean
 - SpringSecurityConfig
 
-### controller
+### controllers
 De controller laag zorgt voor de endpoints van de API
 
 - AuthenticationController
@@ -50,12 +51,16 @@ De DTO's dienen als Data Transfer Object tussen Request en Response.
 
 - CannoliDto
 - CannoliInputDto
+- CannoliItemDto
+- CreateDeliveryRequestDto
 - DeliveryRequestDto
-- DeliveryRequestInputDto
 - DeliveryRequestStatusDto
+- ImageDto
+- PersonDto
+- PersonInputDto
 - UserDto
 
-### exeptions
+### exceptions
 
 - BadRequestExeption
 - RecordNotFoundException
@@ -64,15 +69,19 @@ De DTO's dienen als Data Transfer Object tussen Request en Response.
 
 ### filter
 In de filtermap staat JwtRequestFilter die samen met JwtUtils verantwoordelijk zijn voor de authenticatie door middel van een JWT token.
+
 - JwtRequestFilter
 
 ### models
 De data objecten van de applicatie ook wel POJO's (Plain Old Java Objects)
 op basis van deze objecten zijn de rest van de lagen opgebouwd.
+
 - Authority
+- AuthorityKey
 - Cannoli
-- CannoliFlavour
+- CannoliItem
 - DeliveryRequest
+- DeliveryRequestStatus
 - FileUploadResponse
 - Person
 - Status
@@ -92,13 +101,17 @@ of om specifiek data uit te lezen.
 - PersonRepository
 - UserRepository
 
+### security
+
+- DeliveryRequestSecurity
+
 ### service
 De service laag dient voor de filtering van de dataobjecten voordat deze verzonden worden naar de controller.
 De service laag communiceert met de repository. 
 
 - CannoliService
 - CannoliServiceImpl
-- CustomerUserDetailsService
+- CustomUserDetailsService
 - DeliveryRequestService
 - DeliveryRequestServiceImpl
 - PersonService
@@ -115,10 +128,10 @@ De service laag communiceert met de repository.
 Dit zijn de geconfigureerde testgebruikers. Username + wachtwoord.
 
 **USER**
-1. user - password
+user - password
 
 **ADMIN**
-1.admin - password
+admin - password
  
 ## Cannoli een onvergetelijk Italiaanse delicatesse
 
@@ -130,7 +143,7 @@ cannoli's die de mogelijkheid biedt om franchisenemer te worden.
 Kortom cannoli is een lekkernij die je echt geproefd moet hebben om de intense smaak te kunnen ervaren!
 
 
-###### Eindopdracht Fullstack Developer NOVI College | Angelique Tromper | Copyright © 2023-2024 Cannoli-world App | Alle Rechten Voorbehouden.
+###### Eindopdracht Fullstack Developer NOVI College | Angelique Tromper | Copyright © 2024-2025 Cannoli-world App | Alle Rechten Voorbehouden.
 
 
 

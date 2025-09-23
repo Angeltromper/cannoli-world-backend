@@ -1,47 +1,40 @@
 package nl.novi.cannoliworld.dtos;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.Setter;
 import nl.novi.cannoliworld.models.Cannoli;
-import nl.novi.cannoliworld.models.FileUploadResponse;
-import org.apache.tomcat.util.http.fileupload.FileUpload;
 
-@Getter @Setter
+import java.math.BigDecimal;
+
+@Getter
+@Setter
 public class CannoliDto {
+    private Long id;
+    private String cannoliName;
+    private String cannoliType;
+    private String description;
+    private String ingredients;
+    private BigDecimal price;
+    private ImageDto image;
 
-    public Long id;
-    public String cannoliName;
-    public String cannoliType;
-    public String description;
-    public String ingredients;
-    public double price;
+    public CannoliDto() {}
 
-    @JsonSerialize
-    FileUploadResponse image;
+    public static CannoliDto fromCannoli(Cannoli c) {
+        var dto = new CannoliDto();
+        dto.id = c.getId();
+        dto.cannoliName = c.getCannoliName();
+        dto.cannoliType = c.getCannoliType();
+        dto.description = c.getDescription();
+        dto.ingredients = c.getIngredients();
 
-    public CannoliDto() {
-    }
+        // double → BigDecimal
+        dto.price = BigDecimal.valueOf(c.getPrice());
 
-    public static CannoliDto fromCannoli(Cannoli cannoli) {
-
-        var dto= new CannoliDto();
-
-        dto.id = cannoli.getId();
-
-        dto.cannoliName = cannoli.getCannoliName();
-
-        dto.cannoliType = cannoli.getCannoliType();
-
-        dto.description = cannoli.getDescription();
-
-        dto.ingredients = cannoli.getIngredients();
-
-        dto.price = cannoli.getPrice();
-
-        dto.image = cannoli.getImage();
+        // voorkomt LazyInitializationException
+        dto.image = (c.getImage() != null)
+                ? new ImageDto(c.getImage().getUrl())
+                : null;
 
         return dto;
     }
 }
-

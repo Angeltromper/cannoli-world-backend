@@ -27,7 +27,7 @@ class PhotoControllerTest {
     private String fileStorageLocation = "src/test/resources/";
 
     @Test
-    @DisplayName("Should throw an exception when the file does nog exist")
+    @DisplayName("Uitzondering genereren als bestand niet bestaat")
     void downloadSingleFileWhenFileDoesNotExistThenThrowException() {
         String fileName = "test.txt";
         HttpServletRequest request = mock(HttpServletRequest.class);

@@ -27,7 +27,7 @@ class UserControllerTest {
     private UserController userController;
 
     @Test
-    @DisplayName("Should create a user when the user does not exist")
+    @DisplayName("Gebruiker aanmaken als de gebruiker niet bestaat")
     void createUserWhenUserDoesNotExist() {
 
         MockHttpServletRequest request = new MockHttpServletRequest();
@@ -38,7 +38,7 @@ class UserControllerTest {
         user.setPassword("Angeltr123");
         user.setEmail("test@test.nl");
 
-        ResponseEntity<Object> response = userController.createUser(user);
+        ResponseEntity<Void> response = userController.createUser(user);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 

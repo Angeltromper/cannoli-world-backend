@@ -1,5 +1,6 @@
-# build-artifacts
+# build
 /target/
+/out/
 
 # IDE
 /.idea/
@@ -7,11 +8,16 @@
 *.iml
 
 # logs
+/logs/
 *.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # OS rommel
 .DS_Store
 Thumbs.db
 
-# zips (voorkom per ongeluk commits)
+# archives (handig om te voorkomen)
+/*.zip
 *.zip

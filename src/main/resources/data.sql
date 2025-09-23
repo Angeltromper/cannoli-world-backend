@@ -7,6 +7,8 @@ INSERT INTO image (file_name, content_type, url) VALUES ('cocos_snack.jpg', 'ima
 INSERT INTO image (file_name, content_type, url) VALUES ('creme_catalana_snack.jpg', 'image/jpg', 'http://localhost:8080/images/download/creme_catalana_snack.jpg');
 INSERT INTO image (file_name, content_type, url) VALUES ('aardbei_snack.jpg', 'image/jpg', 'http://localhost:8080/images/download/aardbei_snack.jpg');
 
+
+
 INSERT INTO image (file_name, content_type, url) VALUES ('wittechocola_glutenfree.jpg', 'image/jpg', 'http://localhost:8080/images/download/wittechocola_glutenfree.jpg');
 INSERT INTO image (file_name, content_type, url) VALUES ('bosvruchten_glutenfree.jpg', 'image/jpg', 'http://localhost:8080/images/download/bosvruchten_glutenfree.jpg');
 INSERT INTO image (file_name, content_type, url) VALUES ('hazelnoot_glutenfree.jpg', 'image/jpg', 'http://localhost:8080/images/download/hazelnoot_glutenfree.jpg');
@@ -116,13 +118,10 @@ INSERT INTO cannolis (cannoli_id, cannoli_name, cannoli_type, cannoli_descriptio
 kleurstoffen: E102, E131), gedecoreerd met groene suiker sprinkels [suiker, plantaardige vetten (palm), glucose siroop, emulsifier (SOJA lecithine), kleurstof: E100, E131; calcium]. Geproduceerd in een fabriek waar ze soja, melk grondstoffen en noten gebruiken', 0.67, 'pistache_vegan.jpg');
 
 
+INSERT INTO person (person_firstname, person_lastname, person_street_name, person_house_number, person_house_number_add, person_zipcode, person_city) VALUES ('Admin', 'gegevens', 'Tellerweg', '2', 'A', '1032AA', 'Amsterdam');
+INSERT INTO person (person_firstname, person_lastname, person_street_name, person_house_number, person_house_number_add, person_zipcode, person_city) VALUES ('Angel', 'Tromper', 'Leidsestraat', '8', 'B','1032AB', 'Amsterdam');
 
-
-
-INSERT INTO person ( person_firstname, person_lastname, person_street_name, person_house_number, person_house_number_add, person_zipcode, person_city) VALUES ('Admin', 'gegevens', 'Tellerweg', '2', 'A', '1032AA', 'Amsterdam');
-INSERT INTO person ( person_firstname, person_lastname, person_street_name, person_house_number, person_house_number_add, person_zipcode, person_city) VALUES ('Angel', 'Tromper', 'Leidsestraat', '8', 'B','1032AB', 'Amsterdam');
-
-INSERT INTO users (username, id, password, email, enabled, person_id) VALUES ('admin', 1, '$2a$12$dLAzrrpUAvQJ2gqJfL/0yeDvuI2OKeSh0iAJ8FQZYE6NIs1EVOK6i', 'ínfo@admin.nl', TRUE, 1);
+INSERT INTO users (username, id, password, email, enabled, person_id) VALUES ('admin', 1, '$2a$12$dLAzrrpUAvQJ2gqJfL/0yeDvuI2OKeSh0iAJ8FQZYE6NIs1EVOK6i', 'info@admin.nl', TRUE, 1);
 INSERT INTO users (username, id, password, email, enabled, person_id) VALUES ('angel', 2, '$2a$12$dLAzrrpUAvQJ2gqJfL/0yeDvuI2OKeSh0iAJ8FQZYE6NIs1EVOK6i', 'info@angel.nl', TRUE, 2);
 
 INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_ADMIN');

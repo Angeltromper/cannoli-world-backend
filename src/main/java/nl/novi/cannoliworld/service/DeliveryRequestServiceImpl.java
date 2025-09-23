@@ -1,102 +1,165 @@
 package nl.novi.cannoliworld.service;
 
-import nl.novi.cannoliworld.dtos.DeliveryRequestInputDto;
+import nl.novi.cannoliworld.dtos.CreateDeliveryRequestDto;
 import nl.novi.cannoliworld.dtos.DeliveryRequestStatusDto;
 import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
-import nl.novi.cannoliworld.models.DeliveryRequest;
 import nl.novi.cannoliworld.models.Cannoli;
-import nl.novi.cannoliworld.models.Status;
+import nl.novi.cannoliworld.models.CannoliItem;
+import nl.novi.cannoliworld.models.DeliveryRequest;
+import nl.novi.cannoliworld.models.DeliveryRequestStatus;
+import nl.novi.cannoliworld.models.Person;
+import nl.novi.cannoliworld.repositories.CannoliRepository;
 import nl.novi.cannoliworld.repositories.DeliveryRequestRepository;
 import nl.novi.cannoliworld.repositories.PersonRepository;
-import nl.novi.cannoliworld.repositories.CannoliRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.*;
+import java.util.stream.Collectors;
 
-@Transactional
 @Service
+@Transactional
 public class DeliveryRequestServiceImpl implements DeliveryRequestService {
 
     private final PersonRepository personRepository;
     private final DeliveryRequestRepository deliveryRequestRepository;
     private final CannoliRepository cannoliRepository;
 
-    @Autowired
     public DeliveryRequestServiceImpl(DeliveryRequestRepository deliveryRequestRepository,
-                                      PersonRepository personRepository, CannoliRepository cannoliRepository) {
+                                      PersonRepository personRepository,
+                                      CannoliRepository cannoliRepository) {
         this.deliveryRequestRepository = deliveryRequestRepository;
         this.personRepository = personRepository;
         this.cannoliRepository = cannoliRepository;
     }
 
-    @Override
-    public List<DeliveryRequest> getDeliveryRequests() { return deliveryRequestRepository.findAll(); }
+    /** Toegestane status-overgangen */
+    private static final Map<DeliveryRequestStatus, Set<DeliveryRequestStatus>> ALLOWED = Map.of(
+            DeliveryRequestStatus.NEW,       Set.of(DeliveryRequestStatus.AVAILABLE),
+            DeliveryRequestStatus.AVAILABLE, Set.of(DeliveryRequestStatus.CONFIRMED),
+            DeliveryRequestStatus.CONFIRMED, Set.of(DeliveryRequestStatus.FINISHED),
+            DeliveryRequestStatus.FINISHED,  Set.of()
+    );
+
+    private static boolean isAllowed(DeliveryRequestStatus from, DeliveryRequestStatus to) {
+        return ALLOWED.getOrDefault(from, Set.of()).contains(to);
+    }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<DeliveryRequest> getDeliveryRequests() {
+        return deliveryRequestRepository.findAll();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
     public DeliveryRequest getDeliveryRequest(Long id) {
-        Optional<DeliveryRequest> deliveryRequest = deliveryRequestRepository.findById(id);
-
-        if (deliveryRequest.isPresent()) {
-            return deliveryRequest.get();
-        } else {
-            throw new RecordNotFoundException("deliveryRequest niet gevonden");
-        }
+        return deliveryRequestRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("DeliveryRequest niet gevonden: id=" + id));
     }
 
     @Override
-    public DeliveryRequest createDeliveryRequest(DeliveryRequestInputDto deliveryRequestInputDto) {
-        DeliveryRequest deliveryRequest = new DeliveryRequest();
-
-
-        /*
-        Map<Long, String> cannoliList2 = new HashMap<>();
-        */
-
-
-        Map<Long, String> cannoliList1 = new HashMap<>();
-
-        List<Long> cannoliListLong = deliveryRequestInputDto.getCannoliList();
-
-        for (Long cannoli : cannoliListLong) {
-            Optional<Cannoli> optional = cannoliRepository.findById(cannoli);
-
-            if (!cannoliList1.containsKey(cannoli)) {
-                cannoliList1.put(cannoli,"1-" + "x " + optional.get().getCannoliName() + "-" + '_' + '€' + optional.get().getPrice());
-            } else {
-                String[] customArr = cannoliList1.get(cannoli).split("-");
-
-                int quantity = Integer. parseInt(customArr[0]);
-                int actualQuantity = quantity + 1;
-
-                double doubleValue = optional.get().getPrice() * actualQuantity;
-                BigDecimal bigDecimalDouble = new BigDecimal(doubleValue);
-
-                BigDecimal bigDecimalWithScale = bigDecimalDouble.setScale(2, RoundingMode.HALF_UP);
-
-                cannoliList1.put(cannoli, actualQuantity + "-x" + optional.get().getCannoliName() + "-" + '_' + '€' + bigDecimalWithScale);
-            }
-        }
-        deliveryRequest.setStatus(deliveryRequestInputDto.getStatus().AVAILABLE);
-        deliveryRequest.setCannoliList(cannoliList1.toString());
-        deliveryRequest.setComment(deliveryRequestInputDto.getComment());
-        deliveryRequest.setApplier(personRepository.getReferenceById(deliveryRequestInputDto.getApplier()));
-        return deliveryRequestRepository.save(deliveryRequest);
+    @Transactional(readOnly = true)
+    public List<DeliveryRequest> getMyDeliveryRequests(String username) {
+        Person person = personRepository.findByUserUsername(username)
+                .orElseThrow(() -> new RecordNotFoundException("Persoon niet gevonden voor gebruiker " + username));
+        return deliveryRequestRepository.findByApplier_Id(person.getId());
     }
 
     @Override
-    public void updateDeliveryRequest(DeliveryRequestStatusDto deliveryRequestStatusDto) {
-        Optional<DeliveryRequest> optionalDeliveryRequest = deliveryRequestRepository.findById(deliveryRequestStatusDto.getId());
-        if(optionalDeliveryRequest.isPresent()){
-            optionalDeliveryRequest.get().setStatus(deliveryRequestStatusDto.getStatus());
-        } else {
-            throw new RecordNotFoundException("Delivery request not found");
+    public DeliveryRequest createDeliveryRequest(CreateDeliveryRequestDto dto, String username) {
+        if (dto == null || dto.getItems() == null || dto.getItems().isEmpty()) {
+            throw new IllegalArgumentException("Request body/items mogen niet leeg zijn");
         }
+
+        // items aggregeren per cannoliId (quantity optellen)
+        Map<Long, Integer> qtyById = dto.getItems().stream()
+                .collect(Collectors.toMap(
+                        CreateDeliveryRequestDto.ItemDto::getCannoliId,
+                        CreateDeliveryRequestDto.ItemDto::getQuantity,
+                        Integer::sum
+                ));
+
+        // validatie
+        qtyById.forEach((id, qty) -> {
+            if (id == null) throw new IllegalArgumentException("cannoliId mag niet null zijn");
+            if (qty == null || qty <= 0) throw new IllegalArgumentException("quantity moet > 0 zijn voor cannoliId=" + id);
+        });
+
+        // applier ophalen
+        Person applier = personRepository.findByUserUsername(username)
+                .orElseThrow(() -> new RecordNotFoundException("Persoon niet gevonden voor user " + username));
+
+        // catalogusproducten laden
+        Set<Long> ids = qtyById.keySet();
+        Map<Long, Cannoli> cannoliById = cannoliRepository.findAllById(ids).stream()
+                .collect(Collectors.toMap(Cannoli::getId, c -> c));
+
+        if (cannoliById.size() != ids.size()) {
+            Set<Long> missing = new HashSet<>(ids);
+            missing.removeAll(cannoliById.keySet());
+            throw new RecordNotFoundException("Cannoli niet gevonden voor id(s): " + missing);
+        }
+
+        // JSONB-snapshot bouwen (serverprijzen!)
+        List<CannoliItem> items = qtyById.entrySet().stream()
+                .map(e -> {
+                    Cannoli c = cannoliById.get(e.getKey());
+                    CannoliItem ci = new CannoliItem();
+                    ci.setArtikelnummer(c.getId());
+                    ci.setNaam(c.getCannoliName());
+                    ci.setPrijs(c.getPrice());   // double uit catalogus
+                    ci.setQty(e.getValue());
+                    return ci;
+                })
+                .collect(Collectors.toList());
+
+        // entity vullen
+        DeliveryRequest entity = new DeliveryRequest();
+        entity.setApplier(applier);
+        entity.setComment(dto.getComment());
+        entity.setStatus(DeliveryRequestStatus.NEW);
+        entity.setCannoliList(items);
+
+        // opslaan
+        return deliveryRequestRepository.save(entity);
     }
 
     @Override
-    public void deleteDeliveryRequest(Long id) { deliveryRequestRepository.deleteById(id); }
+    public void updateDeliveryRequest(Long id, DeliveryRequestStatusDto statusDto) {
+        DeliveryRequest entity = deliveryRequestRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("DeliveryRequest niet gevonden: id=" + id));
+
+        if (statusDto == null || statusDto.getStatus() == null) {
+            throw new IllegalArgumentException("Status mag niet leeg zijn");
+        }
+
+        DeliveryRequestStatus current = entity.getStatus();
+        DeliveryRequestStatus next    = statusDto.getStatus();
+
+        if (current == next) {
+            // niets te doen
+            return;
+        }
+
+        // Valideer status-overgang
+        if (!isAllowed(current, next)) {
+            throw new IllegalStateException("Ongeldige status-overgang: " + current + " -> " + next);
+        }
+
+        entity.setStatus(next);
+        deliveryRequestRepository.save(entity);
+    }
+
+    @Override
+    public void deleteDeliveryRequest(Long id) {
+        DeliveryRequest entity = deliveryRequestRepository.findById(id)
+                .orElseThrow(() -> new RecordNotFoundException("DeliveryRequest niet gevonden: id=" + id));
+
+        if (entity.getStatus() != DeliveryRequestStatus.FINISHED) {
+            throw new IllegalStateException("Alleen FINISHED bestellingen mogen worden verwijderd.");
+        }
+
+        deliveryRequestRepository.delete(entity);
+    }
 }

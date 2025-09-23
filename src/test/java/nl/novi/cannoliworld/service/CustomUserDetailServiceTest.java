@@ -9,50 +9,45 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class CustomUserDetailServiceTest {
 
-    @Mock
-    private UserService userService;
-
-    @InjectMocks
-    private CustomUserDetailService customUserDetailService;
+    @Mock UserService userService;
+    @InjectMocks CustomUserDetailService customUserDetailService; // <-- zorgt voor injectie via constructor
 
     @Test
-    @DisplayName("Should throw UsernameNotFoundException when user is not found")
-    void loadUserByUsernameWhenUserIsNotFoundThenThrowUsernameNotFoundException() {
-        when(userService.getUser(anyString())).thenReturn(Optional.empty());
+    @DisplayName("user niet gevonden → UsernameNotFoundException")
+    void loadUserByUsername_userNotFound_throws() {
+        when(userService.getUser("unknown")).thenReturn(Optional.empty());
 
-        assertThrows(
-                UsernameNotFoundException.class,
-                () -> customUserDetailService.loadUserByUsername("username"));
+        assertThrows(UsernameNotFoundException.class,
+                () -> customUserDetailService.loadUserByUsername("unknown"));
+
+        verify(userService).getUser("unknown");
     }
 
     @Test
-    @DisplayName("Should return UserDetails when user is found")
-    void loadUserByUsernameWhenUserIsFoundThenReturnUserDetails() {
-        User user = new User();
-        user.setUsername("test");
-        user.setPassword("test");
-        user.addAuthority(new Authority("test", "ROLE_USER"));
+    @DisplayName("user gevonden → UserDetails met rollen")
+    void loadUserByUsername_userFound_returnsDetails() {
+        User u = new User();
+        u.setUsername("test");
+        u.setPassword("pw");
+        u.addAuthority(new Authority("test","ROLE_USER"));
+        u.addAuthority(new Authority("test","ROLE_ADMIN"));
+        when(userService.getUser("test")).thenReturn(Optional.of(u));
 
-        when(userService.getUser(anyString())).thenReturn(Optional.of(user));
+        var details = customUserDetailService.loadUserByUsername("test");
 
-        UserDetails userDetails = customUserDetailService.loadUserByUsername("test");
-
-        assertEquals( "test", userDetails.getUsername());
-        assertEquals( "test", userDetails.getPassword());
-        assertTrue(userDetails.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
+        assertEquals("test", details.getUsername());
+        assertEquals(2, details.getAuthorities().size());
+        assertTrue(details.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_USER")));
+        assertTrue(details.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN")));
     }
 }
-
-

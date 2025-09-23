@@ -8,10 +8,12 @@ import javax.persistence.*;
 public class FileUploadResponse {
 
     @Id
+    @Column(name = "file_name", nullable = false)
     String fileName;
-
+    @Column(name = "content_type" )
     String contentType;
 
+    @Column(name = "url")
     String url;
 
     public FileUploadResponse(String fileName, String contentType, String url) {
@@ -23,7 +25,6 @@ public class FileUploadResponse {
     public FileUploadResponse() {
     }
     public String getFileName() { return fileName; }
-
     public void setFileName(String fileName) { this.fileName = fileName; }
 
     public String getContentType() { return contentType; }
