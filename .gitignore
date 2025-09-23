@@ -1,16 +1,23 @@
 # build
 /target/
+/out/
 
-# IDE
+# IDE & tool ing
 /.idea/
 /.vscode/
 *.iml
 
 # logs
 *.log
+/logs/
 
-# OS
+# OS rommel
 .DS_Store
 Thumbs.db
+desktop.ini
 
 backend-clean.zip
+
+# Archieven
+*.zip
+
