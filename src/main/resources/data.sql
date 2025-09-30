@@ -22,15 +22,6 @@ INSERT INTO image (file_name, content_type, url) VALUES ('hazelnoot_vegan.jpg', 
 INSERT INTO image (file_name, content_type, url) VALUES ('limoncello_vegan.jpg', 'image/jpg', 'http://localhost:8080/images/download/limoncello_vegan.jpg');
 INSERT INTO image (file_name, content_type, url) VALUES ('pistache_vegan.jpg', 'image/jpg', 'http://localhost:8080/images/download/pistache_vegan.jpg');
 
-INSERT INTO image (file_name, content_type, url) VALUES ('aardbei box (snack).jpg', 'image/jpg', 'http://localhost:8080/images/download/aardbei box (snack).jpg');
-INSERT INTO image (file_name, content_type, url) VALUES ('almond box (snack).jpg', 'image/jpg', 'http://localhost:8080/images/download/almond box (snack).jpg');
-INSERT INTO image (file_name, content_type, url) VALUES ('banaan box (snack).jpg', 'image/jpg', 'http://localhost:8080/images/download/banaan box (snack).jpg');
-INSERT INTO image (file_name, content_type, url) VALUES ('amaretto box (glutenfree).jpg', 'image/jpg', 'http://localhost:8080/images/download/amaretto box (glutenfree).jpg');
-INSERT INTO image (file_name, content_type, url) VALUES ('champagne box (glutenfree).jpg', 'image/jpg', 'http://localhost:8080/images/download/champagne box (glutenfree).jpg');
-INSERT INTO image (file_name, content_type, url) VALUES ('chocola box (glutenfree).jpg', 'image/jpg', 'http://localhost:8080/images/download/chocola box (glutenfree).jpg');
-INSERT INTO image (file_name, content_type, url) VALUES ('coffee box (glutenfree).jpg', 'image/jpg', 'http://localhost:8080/images/download/coffee box (glutenfree).jpg');
-
-
 INSERT INTO cannolis (cannoli_id, cannoli_name, cannoli_type, cannoli_description, cannoli_ingredients, cannoli_price, image_file_name) VALUES (1001, 'Vanille 35gr', 'Snack', 'Cannoli snack is een cannoli gevuld met zachte creme met een krokant omhulsel',
 'Snack VANILLE Creme 52% [suiker, plantaardige vetten (palm, zonnebloem, shea), magere en volle MELK poeder, glucose siroop, emulsifier E322: SOJA lecithine, creme catalana smaak 2%], Wafel (TARWE bloem "00", suiker, zout, wijn, aroma), gedecoreerd met pinda korrels. Geproduceerd in een fabriek,
 waar ze soja, melk grondstoffen en noten gebruiken', 0.67, 'vanille_snack.jpg');
