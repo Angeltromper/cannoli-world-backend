@@ -1,4 +1,4 @@
-![cannoli-world](uploads/Logo Cannoli.png "CannoliApp Logo")
+
 
 # Cannoli-world App | 2025 | Novi College | Eindopdracht Full Stack Developer
 Dit is het Backend gedeelte van mijn eindopdracht voor de Bootcamp Fullstack Development. 
