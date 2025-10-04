@@ -1,32 +1,30 @@
 package nl.novi.cannoliworld.controllers;
 
-import javax.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import nl.novi.cannoliworld.dtos.CannoliDto;
 import nl.novi.cannoliworld.dtos.CannoliInputDto;
 import nl.novi.cannoliworld.models.Cannoli;
 import nl.novi.cannoliworld.service.CannoliService;
-import org.springframework.beans.factory.annotation.Autowired;
+import nl.novi.cannoliworld.service.PhotoService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import java.util.Objects;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/cannolis")
+@RequiredArgsConstructor
 public class CannoliController {
 
     private final CannoliService cannoliService;
-    private final PhotoController photoController;
-
-    @Autowired
-    public CannoliController(CannoliService cannoliService, PhotoController photoController) {
-        this.cannoliService = cannoliService;
-        this.photoController = photoController;
-    }
+    private final PhotoService photoService;   // <-- inject service, geen controller
 
     @GetMapping
     public List<CannoliDto> getCannolis(
@@ -34,7 +32,6 @@ public class CannoliController {
             @RequestParam(value = "cannoliType", required = false, defaultValue = "") String cannoliType) {
 
         List<Cannoli> cannoliList;
-
         boolean hasName = cannoliName != null && !cannoliName.isBlank();
         boolean hasType = cannoliType != null && !cannoliType.isBlank();
 
@@ -45,32 +42,24 @@ public class CannoliController {
         } else {
             cannoliList = cannoliService.findCannoliListByType(cannoliType);
         }
-
-        return cannoliList.stream()
-                .map(CannoliDto::fromCannoli)
-                .toList();
+        return cannoliList.stream().map(CannoliDto::fromCannoli).toList();
     }
 
     @GetMapping("/{id}")
     public CannoliDto getCannoli(@PathVariable("id") Long id) {
-        var cannoli = cannoliService.getCannoli(id);
-        return CannoliDto.fromCannoli(cannoli);
+        return CannoliDto.fromCannoli(cannoliService.getCannoli(id));
     }
 
     @PostMapping
     public ResponseEntity<CannoliDto> createCannoli(@Valid @RequestBody CannoliInputDto dto) {
         var saved = cannoliService.createCannoli(dto.toCannoli());
-        var body = CannoliDto.fromCannoli(saved);
-        return ResponseEntity
-                .created(URI.create("/cannolis/" + saved.getId()))
-                .body(body);
+        return ResponseEntity.created(URI.create("/cannolis/" + saved.getId()))
+                .body(CannoliDto.fromCannoli(saved));
     }
 
     @PutMapping("/{id}")
-    public CannoliDto updateCannoli(@PathVariable Long id,
-                                    @Valid @RequestBody Cannoli updated) {
-        var saved = cannoliService.updateCannoli(id, updated);
-        return CannoliDto.fromCannoli(saved);
+    public CannoliDto updateCannoli(@PathVariable Long id, @Valid @RequestBody Cannoli updated) {
+        return CannoliDto.fromCannoli(cannoliService.updateCannoli(id, updated));
     }
 
     @DeleteMapping("/delete/{id}")
@@ -79,7 +68,7 @@ public class CannoliController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/image/{filename}")
+    @PutMapping("/{id}/image/{filename:.+}")   // <-- dots/spaties toestaan
     public ResponseEntity<Void> assignImageToCannoli(@PathVariable("id") Long cannoliId,
                                                      @PathVariable("filename") String fileName) {
         cannoliService.assignImageToCannoli(fileName, cannoliId);
@@ -89,12 +78,13 @@ public class CannoliController {
     @PutMapping(path = "/{id}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> uploadImageToCannoli(@PathVariable("id") Long cannoliId,
                                                      @RequestParam("file") MultipartFile file) {
-        photoController.singleFileUpload(file);
-        cannoliService.assignImageToCannoli(file.getOriginalFilename(), cannoliId);
+        String url = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/images/download/")
+                .pathSegment(Objects.requireNonNull(file.getOriginalFilename()))
+                .toUriString();
+
+        String stored = photoService.storeFile(file, url);               // <-- service
+        cannoliService.assignImageToCannoli(stored, cannoliId);          // koppel aan cannoli
         return ResponseEntity.noContent().build();
     }
 }
-
-
-
-

@@ -22,8 +22,8 @@ public class PhotoController {
 
     private final PhotoService service;
 
-    @PostMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<FileUploadResponse> singleFileUpload(@RequestParam("file") MultipartFile file) {
+    @PutMapping(path = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<FileUploadResponse> upload(@RequestParam("file") MultipartFile file) {
         String url = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/images/download/")
                 .pathSegment(Objects.requireNonNull(file.getOriginalFilename()))
@@ -36,17 +36,38 @@ public class PhotoController {
     @GetMapping("/download/{fileName:.+}")
     public ResponseEntity<Resource> downLoadSingleFile(@PathVariable String fileName, HttpServletRequest request) {
         Resource resource = service.downloadFile(fileName);
-
         String mimeType;
         try {
             mimeType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
         } catch (IOException e) {
             mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
         }
-
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(mimeType != null ? mimeType : MediaType.APPLICATION_OCTET_STREAM_VALUE))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
+    @DeleteMapping("/delete/{fileName:.+}")
+    public ResponseEntity<Void> delete(@PathVariable String fileName) {
+        service.deleteImage(fileName);
+        return ResponseEntity.noContent().build();
+    }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

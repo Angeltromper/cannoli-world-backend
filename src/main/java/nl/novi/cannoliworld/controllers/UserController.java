@@ -1,11 +1,14 @@
 package nl.novi.cannoliworld.controllers;
+
 import nl.novi.cannoliworld.dtos.UserDto;
 import nl.novi.cannoliworld.service.PhotoService;
 import nl.novi.cannoliworld.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -31,7 +34,7 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-    @PostMapping(path = "/create", consumes = "application/json")
+    @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> createUser(@Valid @RequestBody UserDto dto) {
         String newUsername = userService.createUser(dto);
 
