@@ -1,9 +1,7 @@
 package nl.novi.cannoliworld.dtos;
-
 import lombok.Getter;
 import lombok.Setter;
 import nl.novi.cannoliworld.models.Cannoli;
-
 import java.math.BigDecimal;
 
 @Getter

@@ -1,5 +1,4 @@
 package nl.novi.cannoliworld.exeptions;
-
 import java.io.Serial;
 
 public class UsernameAlreadyExistException extends RuntimeException  {

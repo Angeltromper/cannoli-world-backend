@@ -1,5 +1,4 @@
 package nl.novi.cannoliworld.service;
-
 import nl.novi.cannoliworld.models.Authority;
 import nl.novi.cannoliworld.models.User;
 import org.junit.jupiter.api.DisplayName;
@@ -10,9 +9,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
 import java.util.Optional;
-
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 

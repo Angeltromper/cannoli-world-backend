@@ -1,9 +1,8 @@
 package nl.novi.cannoliworld.dtos;
-
+import nl.novi.cannoliworld.models.Person;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import nl.novi.cannoliworld.models.Person;
 
 public class PersonInputDto {
     public Long id;

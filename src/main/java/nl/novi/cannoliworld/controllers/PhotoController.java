@@ -25,32 +25,29 @@ public class PhotoController {
     public PhotoController(PhotoService service) { this.service = service; }
 
     @PutMapping("/upload")
-    FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file) {
 
-        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("images/download/").path(Objects.requireNonNull(file.getOriginalFilename())).toUriString();
+    public FileUploadResponse singleFileUpload(@RequestParam("file") MultipartFile file) {
+        String url = ServletUriComponentsBuilder.fromCurrentContextPath().path("/images/download/").path(Objects.requireNonNull(file.getOriginalFilename())).toUriString();
         String contentType = file.getContentType();
         String fileName = service.storeFile(file, url);
         return new FileUploadResponse(fileName, contentType, url );
     }
 
     @GetMapping("/download/{fileName}")
-    ResponseEntity<Resource> downLoadSingleFile(@PathVariable String fileName, HttpServletRequest request) {
 
-            Resource resource = service.downLoadFile(fileName);
-            String mimeType;
-
-            try {
-                mimeType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-            } catch (IOException e) {
-                mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
-            }
-            return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).header(HttpHeaders.CONTENT_DISPOSITION,"inline;fileName=" + resource.getFilename()).body(resource);
+    public ResponseEntity<Resource> downLoadSingleFile(@PathVariable String fileName, HttpServletRequest request) {
+        Resource resource = service.downLoadFile(fileName);
+        String mimeType;
+        try {
+            mimeType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+        } catch (IOException e) {
+            mimeType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
         }
-
-        @DeleteMapping("/delete/")
+        return ResponseEntity.ok().contentType(MediaType.parseMediaType(mimeType)).header(HttpHeaders.CONTENT_DISPOSITION,"inline;fileName=" + resource.getFilename()).body(resource);
+    }
+    @DeleteMapping("/delete/{fileName}")
         ResponseEntity<Objects> deleteImage(@PathVariable String fileName){
             service.deleteImage(fileName);
-
             return ResponseEntity.noContent().build();
         }
 }

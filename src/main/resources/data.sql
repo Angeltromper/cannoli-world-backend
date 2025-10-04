@@ -114,4 +114,8 @@ INSERT INTO users (username, id, password, email, enabled, person_id) VALUES ('a
 INSERT INTO users (username, id, password, email, enabled, person_id) VALUES ('angel', 2, '$2a$12$dLAzrrpUAvQJ2gqJfL/0yeDvuI2OKeSh0iAJ8FQZYE6NIs1EVOK6i', 'info@angel.nl', TRUE, 2);
 
 INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_ADMIN');
+<<<<<<< HEAD
 INSERT INTO authorities (username, authority) VALUES ('angel', 'ROLE_USER');
+=======
+INSERT INTO authorities (username, authority) VALUES ('angel', 'ROLE_USER');
+>>>>>>> 96b09ad (verwijderd overbodige foto's en aanpassingen mappen o.a service en dto)

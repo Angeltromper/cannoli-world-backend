@@ -1,5 +1,4 @@
 package nl.novi.cannoliworld.models;
-
 import java.io.Serializable;
 
 public class AuthorityKey implements  Serializable {

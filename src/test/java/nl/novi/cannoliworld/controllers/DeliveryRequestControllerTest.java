@@ -1,5 +1,4 @@
 package nl.novi.cannoliworld.controllers;
-
 import nl.novi.cannoliworld.models.DeliveryRequest;
 import nl.novi.cannoliworld.security.DeliveryRequestSecurity;
 import nl.novi.cannoliworld.service.DeliveryRequestService;
@@ -14,9 +13,7 @@ import org.springframework.context.annotation.ComponentScan.Filter;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.Collections;
-
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;

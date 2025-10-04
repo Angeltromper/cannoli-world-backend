@@ -1,7 +1,6 @@
 package nl.novi.cannoliworld.service;
-
-import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
-import nl.novi.cannoliworld.exeptions.UsernameNotFoundException;
+import nl.novi.cannoliworld.exceptions.RecordNotFoundException;
+import nl.novi.cannoliworld.exceptions.UsernameNotFoundException;
 import nl.novi.cannoliworld.models.Person;
 import nl.novi.cannoliworld.models.User;
 import nl.novi.cannoliworld.repositories.PersonRepository;
@@ -11,11 +10,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,12 +26,13 @@ class UserServiceImplTest {
 
     @Test
     void assignPersonToUser_userNotFound() {
-        when(userRepository.findById("hans")).thenReturn(Optional.empty());
+
+        when(userRepository.findByUsername("hans")).thenReturn(Optional.empty());
 
         assertThrows(UsernameNotFoundException.class,
-                () -> service.assignPersonToUser("hans", 10L));
+                () -> service.assignPersonToUser(10L, "hans"));
 
-        verify(userRepository).findById("hans");
+        verify(userRepository).findByUsername("hans");
         verify(personRepository, never()).findById(anyLong());
         verify(userRepository, never()).save(any());
     }
@@ -42,13 +41,13 @@ class UserServiceImplTest {
     void assignPersonToUser_personNotFound() {
         User u = new User();
         u.setUsername("hans");
-        when(userRepository.findById("hans")).thenReturn(Optional.of(u));
+        when(userRepository.findByUsername("hans")).thenReturn(Optional.of(u));
         when(personRepository.findById(99L)).thenReturn(Optional.empty());
 
         assertThrows(RecordNotFoundException.class,
-                () -> service.assignPersonToUser("hans", 99L));
+                () -> service.assignPersonToUser(99L, "hans"));
 
-        verify(userRepository).findById("hans");
+        verify(userRepository).findByUsername("hans");
         verify(personRepository).findById(99L);
         verify(userRepository, never()).save(any());
     }
@@ -58,13 +57,11 @@ class UserServiceImplTest {
         User u = new User();
         u.setUsername("hans");
         Person p = new Person();
-        p.setId(5L);
 
-        when(userRepository.findById("hans")).thenReturn(Optional.of(u));
+        when(userRepository.findByUsername("hans")).thenReturn(Optional.of(u));
         when(personRepository.findById(5L)).thenReturn(Optional.of(p));
 
-        service.assignPersonToUser("hans", 5L);
-
+        service.assignPersonToUser(5L, "hans");
         assertThat(u.getPerson()).isSameAs(p);
         verify(userRepository).save(u);
     }

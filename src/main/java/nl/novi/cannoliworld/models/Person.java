@@ -1,9 +1,8 @@
 package nl.novi.cannoliworld.models;
-
 import javax.persistence.*;
 import java.util.List;
 
-//@Table (name = "persons")
+@Table (name = "persons")
 @Entity
 public class Person {
 

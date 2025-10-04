@@ -1,6 +1,5 @@
 package nl.novi.cannoliworld.service;
-
-import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
+import nl.novi.cannoliworld.exceptions.RecordNotFoundException;
 import nl.novi.cannoliworld.models.Person;
 import nl.novi.cannoliworld.repositories.PersonRepository;
 import org.junit.jupiter.api.DisplayName;

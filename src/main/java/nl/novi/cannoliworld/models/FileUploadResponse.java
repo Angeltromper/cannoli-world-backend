@@ -1,5 +1,4 @@
 package nl.novi.cannoliworld.models;
-
 import javax.persistence.*;
 
 

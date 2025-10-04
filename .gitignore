@@ -2,22 +2,24 @@
 /target/
 /out/
 
-# IDE
+# IDE & tool ing
 /.idea/
 /.vscode/
 *.iml
 
 # logs
-/logs/
+
 *.log
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+/logs/
 
 # OS rommel
 .DS_Store
 Thumbs.db
 
-# archives (handig om te voorkomen)
-/*.zip
+desktop.ini
+backend-clean.zip
+
+# Archieven
 *.zip
+
+

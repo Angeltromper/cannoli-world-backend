@@ -1,46 +1,25 @@
 package nl.novi.cannoliworld.dtos;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.Getter;
-import lombok.Setter;
-import nl.novi.cannoliworld.models.Authority;
-import nl.novi.cannoliworld.models.Person;
-
-import java.util.Set;
-
-@Setter
-@Getter
 public class UserDto {
 
-    public String username;
-    public String emailAdress;
-
-    @JsonSerialize
-    public Set<Authority> authorities;
-
-    public String password;
-
-    public UserDto() {
-    }
-
-    public boolean isEmpty() {
-        return false;
-    }
-
-    public UserDto get() {
-        return null;
-    }
-
-    public void setId(long l) {
-    }
-
-    public void setPerson(Person person) {
-    }
-
-    public void setApiKey(String randomString) {
-    }
-
-    public void addAuthority(Authority roleUser) {
-    }
+    @NotBlank
+    private String username;
+    @Email
+    @NotBlank
+    @JsonProperty("email")
+    private String emailAddress;
+    @NotBlank
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String password;
+    public UserDto() {}
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
+    public String getEmailAddress() { return emailAddress; }
+    public void setEmailAddress(String emailAddress) { this.emailAddress = emailAddress; }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 }
 

@@ -1,9 +1,7 @@
 package nl.novi.cannoliworld.models;
-
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

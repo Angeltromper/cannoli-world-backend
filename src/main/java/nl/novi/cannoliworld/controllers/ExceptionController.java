@@ -1,8 +1,7 @@
 package nl.novi.cannoliworld.controllers;
-
-import nl.novi.cannoliworld.exeptions.BadRequestException;
-import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
-import nl.novi.cannoliworld.exeptions.UsernameNotFoundException;
+import nl.novi.cannoliworld.exceptions.BadRequestException;
+import nl.novi.cannoliworld.exceptions.RecordNotFoundException;
+import nl.novi.cannoliworld.exceptions.UsernameNotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

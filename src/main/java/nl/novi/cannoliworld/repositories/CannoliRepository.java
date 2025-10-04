@@ -1,5 +1,4 @@
 package nl.novi.cannoliworld.repositories;
-
 import nl.novi.cannoliworld.models.Cannoli;
 import org.springframework.data.jpa.repository.JpaRepository;
 

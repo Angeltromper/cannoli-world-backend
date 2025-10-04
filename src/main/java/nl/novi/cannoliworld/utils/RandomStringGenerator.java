@@ -1,5 +1,4 @@
 package nl.novi.cannoliworld.utils;
-
 import java.util.Random;
 
 public class RandomStringGenerator {

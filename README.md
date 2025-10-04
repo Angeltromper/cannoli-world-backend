@@ -1,5 +1,3 @@
-
-
 # Cannoli-world App | 2025 | Novi College | Eindopdracht Full Stack Developer
 Dit is het Backend gedeelte van mijn eindopdracht voor de Bootcamp Fullstack Development. 
 
@@ -29,8 +27,7 @@ of onderstaande info om de code manueel te clonen.
 
 ### config
 configuratie bestanden
-
-- GlobalCorsConfiguration
+ 
 - PasswordEncoderBean
 - SpringSecurityConfig
 
@@ -62,7 +59,7 @@ De DTO's dienen als Data Transfer Object tussen Request en Response.
 
 ### exceptions
 
-- BadRequestExeption
+- BadRequestException
 - RecordNotFoundException
 - UserNameAlreadyExistException
 - UsernameNotFoundException

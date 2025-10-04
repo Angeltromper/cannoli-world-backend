@@ -21,7 +21,6 @@
         <java.version>17</java.version>
     </properties>
 
-    <!-- Houd Jackson op de 2.13.5-lijn die bij Boot 2.7 hoort -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -35,7 +34,7 @@
     </dependencyManagement>
 
     <dependencies>
-        <!-- JWT (bewust 0.9.1 i.v.m. huidige login) -->
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>

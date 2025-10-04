@@ -1,36 +1,32 @@
 package nl.novi.cannoliworld.models;
-
-
+import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
-import java.io.Serializable;
-
 
 @Entity
-@IdClass(AuthorityKey.class)
 @Table(name = "authorities")
-public class Authority implements Serializable {
+public class Authority implements GrantedAuthority {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    // FK naar User.username (User heeft @Id String username)
     @Column(nullable = false)
     private String username;
 
-    @Id
+    // bv. "ROLE_USER", "ROLE_ADMIN"
     @Column(nullable = false)
     private String authority;
-
-    public Authority() {
-
-    }
+    public Authority() {}
     public Authority(String username, String authority) {
         this.username = username;
         this.authority = authority;
     }
-
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
-
+    @Override
     public String getAuthority() { return authority; }
 
+    public Long getId() { return id; }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
     public void setAuthority(String authority) { this.authority = authority; }
-
 }

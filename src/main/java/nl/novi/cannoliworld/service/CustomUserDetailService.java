@@ -1,5 +1,4 @@
 package nl.novi.cannoliworld.service;
-
 import nl.novi.cannoliworld.models.Authority;
 import nl.novi.cannoliworld.models.User;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

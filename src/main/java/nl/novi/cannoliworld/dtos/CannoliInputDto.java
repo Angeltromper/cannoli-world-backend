@@ -1,8 +1,6 @@
 package nl.novi.cannoliworld.dtos;
-
 import lombok.Data;
 import nl.novi.cannoliworld.models.Cannoli;
-
 import javax.validation.constraints.*;
 
 @Data
