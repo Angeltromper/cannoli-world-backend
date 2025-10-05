@@ -1,13 +1,18 @@
 package nl.novi.cannoliworld.service;
+
 import nl.novi.cannoliworld.dtos.UserDto;
 import nl.novi.cannoliworld.exceptions.RecordNotFoundException;
 import nl.novi.cannoliworld.exceptions.UsernameNotFoundException;
+import nl.novi.cannoliworld.models.Authority;
+import nl.novi.cannoliworld.models.Person;
 import nl.novi.cannoliworld.models.User;
+import nl.novi.cannoliworld.repositories.AuthorityRepository;
 import nl.novi.cannoliworld.repositories.PersonRepository;
 import nl.novi.cannoliworld.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Collection;
 import java.util.Optional;
 
@@ -16,14 +21,18 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PersonRepository personRepository;
+    private final AuthorityRepository authorityRepository;
     private final PasswordEncoder passwordEncoder;
+
 
 
     public UserServiceImpl(UserRepository userRepository,
                            PersonRepository personRepository,
+                           AuthorityRepository authorityRepository,
                            PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.personRepository = personRepository;
+        this.authorityRepository = authorityRepository;
         this.passwordEncoder = passwordEncoder;
 
     }
@@ -51,8 +60,19 @@ public class UserServiceImpl implements UserService {
         u.setUsername(dto.getUsername());
         u.setEmail(dto.getEmailAddress());
         u.setPassword(passwordEncoder.encode(dto.getPassword()));
+        userRepository.save(u);
 
-        return userRepository.save(u).getUsername();
+        Authority a = new Authority();
+        a.setUsername(u.getUsername());
+        a.setAuthority("ROLE_USER");
+        authorityRepository.save(a);
+
+
+        Person p = personRepository.save(new Person());
+        u.setPerson(p);
+
+
+        return u.getUsername();
     }
 
     @Override
