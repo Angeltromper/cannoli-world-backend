@@ -9,7 +9,7 @@ public interface UserService {
     Collection<User> getUsers();
     Optional<User> getUser(String username);
     String createUser(UserDto dto);
-    void deleteUser(String username);
+    void deleteUser(String usernameToDelete);
     boolean userExists(String username);
     void assignPersonToUser(Long personId, String username);
     void assignImageToUser(String username, String fileName);

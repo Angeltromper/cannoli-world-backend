@@ -23,9 +23,7 @@ class PersonControllerIT {
 
     @Autowired MockMvc mvc;
     @Autowired PersonRepository personRepository;
-
     private Long personId;
-
     @BeforeEach
     void setUp() {
         personRepository.deleteAll();

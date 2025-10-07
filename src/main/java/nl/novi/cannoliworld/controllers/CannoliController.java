@@ -24,7 +24,7 @@ import java.util.Objects;
 public class CannoliController {
 
     private final CannoliService cannoliService;
-    private final PhotoService photoService;   // <-- inject service, geen controller
+    private final PhotoService photoService;
 
     @GetMapping
     public List<CannoliDto> getCannolis(
@@ -68,7 +68,7 @@ public class CannoliController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{id}/image/{filename:.+}")   // <-- dots/spaties toestaan
+    @PutMapping("/{id}/image/{filename:.+}")
     public ResponseEntity<Void> assignImageToCannoli(@PathVariable("id") Long cannoliId,
                                                      @PathVariable("filename") String fileName) {
         cannoliService.assignImageToCannoli(fileName, cannoliId);
@@ -83,8 +83,8 @@ public class CannoliController {
                 .pathSegment(Objects.requireNonNull(file.getOriginalFilename()))
                 .toUriString();
 
-        String stored = photoService.storeFile(file, url);               // <-- service
-        cannoliService.assignImageToCannoli(stored, cannoliId);          // koppel aan cannoli
+        String stored = photoService.storeFile(file, url);
+        cannoliService.assignImageToCannoli(stored, cannoliId);
         return ResponseEntity.noContent().build();
     }
 }

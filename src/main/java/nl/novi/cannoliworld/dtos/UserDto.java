@@ -8,7 +8,6 @@ import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class UserDto {
-
     @NotBlank(message = "Gebruikersnaam is verplicht")
     @Size(min = 3, max = 32, message = "Gebruikersnaam moet 3-32 tekens zijn")
     @Pattern(

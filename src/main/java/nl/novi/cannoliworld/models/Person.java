@@ -5,11 +5,12 @@ import java.util.List;
 
 
 @Entity
+@Table(name = "person")
 public class Person {
 
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
-    Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     String personFirstname;
 
     String personLastname;
@@ -25,7 +26,7 @@ public class Person {
     String personZipcode;
 
     @OneToOne(mappedBy = "person")
-    User user;
+    private User user;
 
     @OneToMany(mappedBy = "applier")
     private List<DeliveryRequest> applier;
@@ -96,7 +97,6 @@ public class Person {
     public void setPersonZipcode(String zipcode) {
         this.personZipcode = zipcode;
     }
-
 }
 
 

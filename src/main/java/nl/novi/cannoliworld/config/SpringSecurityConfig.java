@@ -75,7 +75,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET, "/cannolis/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/cannolis/*/image").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/cannolis/**").hasRole("ADMIN")
-                
+
                 .antMatchers(HttpMethod.GET,  "/deliveryRequests/all").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET,  "/deliveryRequests/mine").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.POST, "/deliveryRequests/**").hasAnyRole("USER","ADMIN")

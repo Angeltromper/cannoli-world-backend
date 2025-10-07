@@ -5,6 +5,7 @@ import nl.novi.cannoliworld.service.PhotoService;
 import nl.novi.cannoliworld.service.UserService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -24,6 +25,7 @@ public class UserController {
         this.photoService = photoService;
     }
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
     }
@@ -48,12 +50,14 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{username}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String username) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable String username) {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{username}/{personId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> assignPersonToUser(@PathVariable String username,
                                                    @PathVariable Long personId) {
         userService.assignPersonToUser(personId, username);

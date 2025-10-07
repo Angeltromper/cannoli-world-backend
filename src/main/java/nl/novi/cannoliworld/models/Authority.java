@@ -9,24 +9,19 @@ public class Authority implements GrantedAuthority {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    // FK naar User.username (User heeft @Id String username)
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String username;
-
-    // bv. "ROLE_USER", "ROLE_ADMIN"
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String authority;
     public Authority() {}
     public Authority(String username, String authority) {
         this.username = username;
         this.authority = authority;
     }
-    @Override
-    public String getAuthority() { return authority; }
-
     public Long getId() { return id; }
     public String getUsername() { return username; }
+    public String getAuthority() { return authority; }
+
     public void setUsername(String username) { this.username = username; }
     public void setAuthority(String authority) { this.authority = authority; }
 }
