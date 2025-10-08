@@ -1,9 +1,7 @@
 package nl.novi.cannoliworld.models;
-
 import io.hypersistence.utils.hibernate.type.json.JsonType;
 import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,8 +34,8 @@ public class DeliveryRequest {
     @Column(name = "comment", columnDefinition = "text")
     private String comment;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "applier_id", nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @JoinColumn(name = "applier_id", nullable = true)
     private Person applier;
 
     @ManyToOne(fetch = FetchType.LAZY)

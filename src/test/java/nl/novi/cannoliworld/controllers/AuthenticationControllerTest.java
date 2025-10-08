@@ -1,5 +1,4 @@
 package nl.novi.cannoliworld.controllers;
-
 import nl.novi.cannoliworld.payload.AuthenticationRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

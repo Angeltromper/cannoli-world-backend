@@ -115,3 +115,4 @@ INSERT INTO users (username, id, password, email, enabled, person_id) VALUES ('a
 
 INSERT INTO authorities (username, authority) VALUES ('admin', 'ROLE_ADMIN');
 INSERT INTO authorities (username, authority) VALUES ('angel', 'ROLE_USER');
+

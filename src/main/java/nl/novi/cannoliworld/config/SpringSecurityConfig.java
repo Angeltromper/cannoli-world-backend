@@ -27,7 +27,7 @@ import java.util.List;
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    public CustomUserDetailService customUserDetailService;
+    private CustomUserDetailService customUserDetailService;
 
     @Autowired
     private JwtRequestFilter jwtRequestFilter;
@@ -38,7 +38,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailService)
-        .passwordEncoder(passwordEncoder);
+     .passwordEncoder(passwordEncoder);
     }
 
     @Override
@@ -50,14 +50,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .cors() // <-- AAN
-                .and()
+
+                .cors().and()
                 .csrf().disable()
                 .authorizeRequests()
-                // Sta preflight toe
-                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
-                // Users
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/authenticate").permitAll()
+
                 .antMatchers(HttpMethod.GET, "/users", "/users/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/users/all").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/users/*").permitAll()
@@ -65,7 +65,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/users/**").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/users/delete/*").hasRole("ADMIN")
 
-                // Persons
                 .antMatchers(HttpMethod.GET, "/persons", "/persons/").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/persons/users").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/persons/*").permitAll()
@@ -73,27 +72,21 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT, "/persons/*").permitAll()
                 .antMatchers(HttpMethod.DELETE, "/persons/**").hasRole("ADMIN")
 
-                // Cannolis
                 .antMatchers(HttpMethod.GET, "/cannolis/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/cannolis/*/image").hasRole("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/cannolis/*/image").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/cannolis/**").hasRole("ADMIN")
 
-                // Delivery requests
-                .antMatchers(HttpMethod.GET, "/deliveryRequests/all").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET, "/deliveryRequests/mine").authenticated()
-                .antMatchers(HttpMethod.GET, "/deliveryRequests/*").authenticated() // eigenaar/admin via @PreAuthorize
-                .antMatchers(HttpMethod.POST, "/deliveryRequests/**").authenticated()
-                .antMatchers(HttpMethod.PUT, "/deliveryRequests/*").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,  "/deliveryRequests/all").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET,  "/deliveryRequests/mine").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.POST, "/deliveryRequests/**").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.GET,  "/deliveryRequests/**").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.PUT,  "/deliveryRequests/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/deliveryRequests/**").hasRole("ADMIN")
 
-                // Images
-                .antMatchers(HttpMethod.GET, "/images/upload").permitAll()
+                .antMatchers(HttpMethod.PUT, "/images/upload").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET, "/images/download/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/images/delete").hasRole("ADMIN")
+                .antMatchers(HttpMethod.DELETE, "/images/delete/**").hasRole("ADMIN")
 
-                // Auth (login)
-                .antMatchers(HttpMethod.POST,"/authenticate").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
@@ -105,14 +98,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration cfg = new CorsConfiguration();
 
-        // Alle localhost-poorten toestaan (dev)
-        cfg.setAllowedOriginPatterns(List.of(
-                "http://127.0.0.1:*",
-                "http://localhost:*"));
-
-        cfg.setAllowedHeaders(List.of("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"));
-        cfg.setExposedHeaders(List.of("Authorization", "Location"));
+        cfg.setAllowedOriginPatterns(List.of("http://localhost:*", "http://127.0.0.1:*"));
         cfg.setAllowedMethods(List.of("GET","POST","PUT","DELETE","PATCH","OPTIONS"));
+        cfg.setAllowedHeaders(List.of("Authorization","Content-Type","X-Requested-With","Accept","Origin"));
+        cfg.setExposedHeaders(List.of("Authorization","Location"));
         cfg.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

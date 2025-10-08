@@ -1,8 +1,7 @@
 package nl.novi.cannoliworld.service;
-
 import nl.novi.cannoliworld.dtos.CreateDeliveryRequestDto;
 import nl.novi.cannoliworld.dtos.DeliveryRequestStatusDto;
-import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
+import nl.novi.cannoliworld.exceptions.RecordNotFoundException;
 import nl.novi.cannoliworld.models.Cannoli;
 import nl.novi.cannoliworld.models.CannoliItem;
 import nl.novi.cannoliworld.models.DeliveryRequest;
@@ -13,7 +12,6 @@ import nl.novi.cannoliworld.repositories.DeliveryRequestRepository;
 import nl.novi.cannoliworld.repositories.PersonRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.*;
 import java.util.stream.Collectors;
 

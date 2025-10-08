@@ -1,12 +1,10 @@
 package nl.novi.cannoliworld.service;
-
-import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
+import nl.novi.cannoliworld.exceptions.RecordNotFoundException;
 import nl.novi.cannoliworld.models.Cannoli;
 import nl.novi.cannoliworld.repositories.CannoliRepository;
 import nl.novi.cannoliworld.repositories.FileUploadRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 
 @Service

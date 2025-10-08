@@ -2,7 +2,7 @@ package nl.novi.cannoliworld.service;
 
 import nl.novi.cannoliworld.dtos.CreateDeliveryRequestDto;
 import nl.novi.cannoliworld.dtos.DeliveryRequestStatusDto;
-import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
+import nl.novi.cannoliworld.exceptions.RecordNotFoundException;
 import nl.novi.cannoliworld.models.*;
 import nl.novi.cannoliworld.repositories.CannoliRepository;
 import nl.novi.cannoliworld.repositories.DeliveryRequestRepository;
@@ -13,9 +13,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-
 import java.util.*;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.*;
@@ -31,7 +29,6 @@ class DeliveryRequestServiceImplTest {
     @InjectMocks
     private DeliveryRequestServiceImpl service;
 
-    // helpers
     private static Cannoli cannoli(long id, String name, double price) {
         Cannoli c = new Cannoli();
         c.setId(id);
@@ -51,8 +48,6 @@ class DeliveryRequestServiceImplTest {
         it.setQuantity(qty);
         return it;
     }
-
-    // ------------------ create ------------------
 
     @Test
     @DisplayName("createDeliveryRequest — bouwt items (geaggregeerd), status NEW en slaat op")
@@ -120,8 +115,6 @@ class DeliveryRequestServiceImplTest {
         assertThrows(RecordNotFoundException.class, () -> service.createDeliveryRequest(dto, "user"));
     }
 
-    // ------------------ reads ------------------
-
     @Test
     @DisplayName("getDeliveryRequests — alles")
     void list_all() {
@@ -160,8 +153,6 @@ class DeliveryRequestServiceImplTest {
         verify(personRepository).findByUserUsername("angel");
         verify(deliveryRequestRepository).findByApplier_Id(5L);
     }
-
-    // ------------------ update status ------------------
 
     @Test
     @DisplayName("updateDeliveryRequest — ok: NEW → AVAILABLE")
@@ -229,8 +220,6 @@ class DeliveryRequestServiceImplTest {
         var dto = new DeliveryRequestStatusDto(); dto.setStatus(DeliveryRequestStatus.AVAILABLE);
         assertThrows(RecordNotFoundException.class, () -> service.updateDeliveryRequest(8L, dto));
     }
-
-    // ------------------ delete ------------------
 
     @Test
     @DisplayName("deleteDeliveryRequest — alleen FINISHED mag worden verwijderd")

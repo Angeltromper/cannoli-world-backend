@@ -1,6 +1,4 @@
 package nl.novi.cannoliworld.models;
-
-import javax.persistence.Entity;
 import java.io.Serializable;
 import java.util.Objects;
 

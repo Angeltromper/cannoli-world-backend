@@ -1,5 +1,4 @@
-package nl.novi.cannoliworld.exeptions;
-
+package nl.novi.cannoliworld.exceptions;
 import java.io.Serial;
 
 public class BadRequestException extends RuntimeException {

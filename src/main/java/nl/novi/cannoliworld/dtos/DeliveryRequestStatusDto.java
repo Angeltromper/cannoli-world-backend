@@ -1,7 +1,5 @@
 package nl.novi.cannoliworld.dtos;
-
 import nl.novi.cannoliworld.models.DeliveryRequestStatus;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 

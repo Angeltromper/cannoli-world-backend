@@ -1,8 +1,5 @@
 package nl.novi.cannoliworld.service;
-
 import nl.novi.cannoliworld.models.Person;
-
-import java.util.Collection;
 import java.util.List;
 
 public interface PersonService {

@@ -1,7 +1,5 @@
 package nl.novi.cannoliworld.controllers;
-
-import nl.novi.cannoliworld.exeptions.BadRequestException;
-import nl.novi.cannoliworld.models.User;
+import nl.novi.cannoliworld.dtos.UserDto;
 import nl.novi.cannoliworld.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -30,16 +28,16 @@ class UserControllerTest {
     @DisplayName("Gebruiker aanmaken als de gebruiker niet bestaat")
     void createUserWhenUserDoesNotExist() {
 
-        MockHttpServletRequest request = new MockHttpServletRequest();
+
+        var request = new MockHttpServletRequest();
         RequestContextHolder.setRequestAttributes(new ServletRequestAttributes(request));
 
-        User user = new User();
-        user.setUsername("Angeltr");
-        user.setPassword("Angeltr123");
-        user.setEmail("test@test.nl");
+        UserDto dto = new UserDto();
+        dto.setUsername("Angeltr");
+        dto.setPassword("Angeltr123");
+        dto.setEmailAddress("test@test.nl");
 
-        ResponseEntity<Void> response = userController.createUser(user);
-
+        ResponseEntity<Void> response = userController.createUser(dto);
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
 
     }

@@ -1,14 +1,16 @@
 package nl.novi.cannoliworld.controllers;
 
-import nl.novi.cannoliworld.models.User;
-import nl.novi.cannoliworld.service.UserService;
+import nl.novi.cannoliworld.dtos.UserDto;
 import nl.novi.cannoliworld.service.PhotoService;
-import org.springframework.beans.factory.annotation.Autowired;
+import nl.novi.cannoliworld.service.UserService;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @CrossOrigin
@@ -18,14 +20,12 @@ public class UserController {
 
     private final UserService userService;
     private final PhotoService photoService;
-
-    @Autowired
     public UserController(UserService userService, PhotoService photoService) {
         this.userService = userService;
         this.photoService = photoService;
     }
-
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getUsers() {
         return ResponseEntity.ok(userService.getUsers());
     }
@@ -36,10 +36,9 @@ public class UserController {
                 .map(ResponseEntity::ok)
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
-
-    @PostMapping("/create")
-    public ResponseEntity<Void> createUser(@RequestBody User user) {
-        String newUsername = userService.createUser(user);
+    @PostMapping(path = "/create", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Void> createUser(@Valid @RequestBody UserDto dto) {
+        String newUsername = userService.createUser(dto);
 
         URI location = ServletUriComponentsBuilder
                 .fromCurrentContextPath()
@@ -51,12 +50,14 @@ public class UserController {
     }
 
     @DeleteMapping("/delete/{username}")
-    public ResponseEntity<Void> deleteUser(@PathVariable String username) {
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> delete(@PathVariable String username) {
         userService.deleteUser(username);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{username}/{personId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> assignPersonToUser(@PathVariable String username,
                                                    @PathVariable Long personId) {
         userService.assignPersonToUser(personId, username);
@@ -73,7 +74,7 @@ public class UserController {
     @PutMapping(value = "/{username}/image", consumes = "multipart/form-data")
     public ResponseEntity<Void> uploadImageToUser(@PathVariable String username,
                                                   @RequestParam MultipartFile file) {
-        // sla het bestand op en krijg de bestandsnaam/URL terug
+
         String storedFileName = photoService.storeFile(file, "/users/" + username);
         userService.assignImageToUser(username, storedFileName);
         return ResponseEntity.ok().build();

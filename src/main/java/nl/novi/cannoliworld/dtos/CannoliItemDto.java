@@ -1,7 +1,5 @@
 package nl.novi.cannoliworld.dtos;
-
 import lombok.Data;
-
 import java.math.BigDecimal;
 
 @Data

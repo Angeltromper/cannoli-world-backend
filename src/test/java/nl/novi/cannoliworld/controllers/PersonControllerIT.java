@@ -1,5 +1,4 @@
 package nl.novi.cannoliworld.controllers;
-
 import nl.novi.cannoliworld.models.Person;
 import nl.novi.cannoliworld.repositories.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,9 +23,7 @@ class PersonControllerIT {
 
     @Autowired MockMvc mvc;
     @Autowired PersonRepository personRepository;
-
     private Long personId;
-
     @BeforeEach
     void setUp() {
         personRepository.deleteAll();

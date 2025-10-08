@@ -1,15 +1,11 @@
 package nl.novi.cannoliworld.service;
-
-import nl.novi.cannoliworld.exeptions.RecordNotFoundException;
+import nl.novi.cannoliworld.exceptions.RecordNotFoundException;
 import nl.novi.cannoliworld.models.Person;
 import nl.novi.cannoliworld.repositories.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService {
