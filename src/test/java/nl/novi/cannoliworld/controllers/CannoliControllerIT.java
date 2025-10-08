@@ -1,12 +1,12 @@
 package nl.novi.cannoliworld.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import nl.novi.cannoliworld.config.PasswordEncoderBean;
 import nl.novi.cannoliworld.dtos.CannoliInputDto;
 import nl.novi.cannoliworld.filter.JwtRequestFilter;
 import nl.novi.cannoliworld.models.Cannoli;
 import nl.novi.cannoliworld.service.CannoliService;
 import nl.novi.cannoliworld.service.CustomUserDetailService;
+import nl.novi.cannoliworld.service.PhotoService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
@@ -22,6 +23,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(CannoliController.class)
@@ -44,7 +46,10 @@ class CannoliControllerIT {
     JwtRequestFilter jwtRequestFilter;
 
     @MockBean
-    PasswordEncoderBean passwordEncoderBean;
+    PasswordEncoder passwordEncoder;
+
+    @MockBean
+    PhotoService photoService;
 
     @Test
     @DisplayName("GET /cannolis zonder params → 200 met lijst")
@@ -61,6 +66,7 @@ class CannoliControllerIT {
 
         mvc.perform(get("/cannolis"))
                 .andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$[0].id").value(1))
                 .andExpect(jsonPath("$[0].cannoliName").value("Test"))
@@ -87,9 +93,12 @@ class CannoliControllerIT {
 
         when(cannoliService.createCannoli(any())).thenReturn(saved);
 
+
+
         mvc.perform(post("/cannolis")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(in)))
+                .andDo(print())
                 .andExpect(status().isCreated())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.id").value(10))
