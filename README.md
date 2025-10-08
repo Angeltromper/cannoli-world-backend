@@ -1,4 +1,6 @@
-# Cannoli-world App | 2025 | Novi College | Eindopdracht Full Stack Developer
+![cannoli-world logo](./uploads/Logo%20Cannoli.png)
+
+#Cannoli-world App | 2025 | Novi College | Eindopdracht Full Stack Developer
 Dit is het Backend gedeelte van mijn eindopdracht voor de Bootcamp Fullstack Development. 
 
 [Mijn Github voor de BACK-END vind je hier](https://github.com/AngelTromper/cannoli-world-backend)
